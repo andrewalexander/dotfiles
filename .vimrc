@@ -51,6 +51,7 @@ set nocursorline
 set updatetime=400
 set pumheight=10             " Completion window max size
 set lazyredraw               " Wait to redraw
+set noswapfile
 set foldenable
 set foldlevelstart=10
 set foldnestmax=10
@@ -141,8 +142,11 @@ Plug 'tpope/vim-surround'
 Plug 'tpope/vim-dispatch'
 Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
+Plug 'posva/vim-vue'
+Plug 'rust-lang/rust.vim'
 
 " Currently evaluating
+Plug 'alvan/vim-closetag'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'qpkorr/vim-bufkill'
 Plug 'unblevable/quick-scope'
@@ -222,6 +226,8 @@ augroup go
   autocmd Filetype go command! -bang AS call go#alternate#Switch(<bang>0, 'split')
   autocmd Filetype go command! -bang AT call go#alternate#Switch(<bang>0, 'tabe')
 augroup END
+" ==================== rust.vim ====================
+let g:rustfmt_autosave = 1
 " ==================== delimitMate ====================
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
@@ -280,5 +286,31 @@ autocmd FileType c setlocal ts=4 sts=4 sw=4 expandtab
 autocmd BufRead,BufNewFile *.go :set filetype=go
 autocmd BufRead,BufNewFile *.tag :set filetype=html
 autocmd BufRead,BufNewFile *.vs :set filetype=c
+autocmd BufRead,BufNewFile *.vue setlocal shiftwidth=2 tabstop=2
 
 " ==================== Misc ==================== SECTION
+
+" Fix highlighting breaking randomly
+autocmd FileType vue syntax sync fromstart
+
+" Make vue templates compatible with NERDCommenter
+let g:ft = ''
+function! NERDCommenter_before()
+  if &ft == 'vue'
+    let g:ft = 'vue'
+    let stack = synstack(line('.'), col('.'))
+    if len(stack) > 0
+      let syn = synIDattr((stack)[0], 'name')
+      if len(syn) > 0
+        exe 'setf ' . substitute(tolower(syn), '^vue_', '', '')
+      endif
+    endif
+  endif
+endfunction
+
+function! NERDCommenter_after()
+  if g:ft == 'vue'
+    setf vue
+    let g:ft = ''
+  endif
+endfunction
