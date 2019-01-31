@@ -36,6 +36,7 @@ set noerrorbells             " No beeps
 set number                   " Show line numbers
 set showcmd                  " Show me what I'm typing
 set nobackup                 " Don't create annoying backup files
+set backupcopy=no
 set splitright               " Split vertical windows right to the current windows
 set splitbelow               " Split horizontal windows below to the current windows
 set autowrite                " Automatically save before :next, :make etc.
@@ -77,7 +78,7 @@ imap jk <Esc>
 " Easier menu access and remap repeat motion
 nnoremap ; :
 nnoremap m ;
-nnoremap M ,,
+nnoremap M ,
 
 " Standard Movement
 nnoremap <C-J> <C-W><C-J>
@@ -139,17 +140,19 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'tpope/vim-dispatch'
 Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
-Plug 'posva/vim-vue'
 Plug 'rust-lang/rust.vim'
+Plug 'unblevable/quick-scope'
 
 " Currently evaluating
 Plug 'alvan/vim-closetag'
 Plug 'derekwyatt/vim-fswitch'
 Plug 'qpkorr/vim-bufkill'
-Plug 'unblevable/quick-scope'
+Plug 'burnettk/vim-angular'
+Plug 'leafgarland/typescript-vim'
+"Plug 'posva/vim-vue'
+"Plug 'tpope/vim-dispatch'
 
 call plug#end()
 
@@ -187,6 +190,7 @@ let NERDTreeShowHidden=1
 let g:NERDShutUp = 1
 let NERDTreeIgnore = ['\.pyc$', '\.so$', '__pycache__$']
 map <C-n> :NERDTreeToggle<CR>
+"let g:NERDTreeWinSize=60
 noremap <Leader>f :NERDTreeFind<cr>
 " ==================== fswitch ====================
 autocmd! BufEnter *.cc let b:fswitchdst = 'h,hpp'
@@ -233,7 +237,7 @@ let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
 let g:delimitMate_smart_quotes = 1
 let g:delimitMate_expand_inside_quotes = 0
-let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
+"let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
 imap <expr> <CR> pumvisible() ? "\<c-y>" : "<Plug>delimitMateCR"
 " ==================== vim-dispatch ====================
 nnoremap <silent> <Leader>b :w<CR>:Make<cr>
@@ -283,6 +287,8 @@ autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType go setlocal ts=4 sts=4 sw=4 noexpandtab
 autocmd FileType c setlocal ts=4 sts=4 sw=4 expandtab
+autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd FileType sass setlocal shiftwidth=2 tabstop=2
 autocmd BufRead,BufNewFile *.go :set filetype=go
 autocmd BufRead,BufNewFile *.tag :set filetype=html
 autocmd BufRead,BufNewFile *.vs :set filetype=c
