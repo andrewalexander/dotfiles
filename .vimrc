@@ -35,8 +35,8 @@ set directory=$HOME/.vim/swap/
 set noerrorbells             " No beeps
 set number                   " Show line numbers
 set showcmd                  " Show me what I'm typing
-set nobackup                 " Don't create annoying backup files
-set backupcopy=no
+set nobackup                 " Don't create annoying backup files TODO: this might not do anything
+set backupcopy=no            " Prevent backups and creation of 4913 file
 set splitright               " Split vertical windows right to the current windows
 set splitbelow               " Split horizontal windows below to the current windows
 set autowrite                " Automatically save before :next, :make etc.
