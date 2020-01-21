@@ -1,4 +1,5 @@
-.vim/.netrwhist
-.vim/plugged/*
-.vim/swap/*
-.vim/undo/*
+config/.vim/.netrwhist
+config/.vim/plugged/*
+config/.vim/swap/*
+config/.vim/undo/*
+config/.vim/view/*

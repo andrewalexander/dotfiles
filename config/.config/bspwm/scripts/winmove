@@ -1,0 +1,36 @@
+#!/bin/bash
+
+# Call with direction [west, south, north, or east] from sxhkd
+# If in vim window, forward ctrl-[h, j, k, l], otherwise tell bspwm to focus window in given direction
+
+echo "WHAT"
+window=$(xdotool getwindowfocus getwindowname)
+pid=$(xdotool getwindowfocus getwindowpid)
+pid=$(xprop -id `xdotool getwindowfocus` | grep '_NET_WM_PID' | grep -oE '[[:digit:]]*$')
+echo "pid: $pid"
+bin=$(ps -H -o cmd)
+#echo "Window: $bin"
+#if [ "$window" = "vim" ]
+if [[ "$window" =~ "VIM" ]]
+then
+    #echo "YES"
+    #case "$1" in
+        #west)
+            #keysym="h"
+            #;;
+        #south)
+            #keysym="j"
+            #;;
+        #north)
+            #keysym="k"
+            #;;
+        #east)
+            #keysym="l"
+            #;;
+    #esac
+
+    #xdotool keyup super+$keysym key ctrl+$keysym
+    bspc node -f $1
+else
+    bspc node -f $1
+fi
