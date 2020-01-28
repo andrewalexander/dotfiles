@@ -13,6 +13,8 @@ autocmd FileType c setlocal ts=4 sts=4 sw=4 expandtab
 autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType sass setlocal shiftwidth=2 tabstop=2
 autocmd FileType sh setlocal shiftwidth=4 tabstop=4 expandtab
+autocmd FileType terraform syn sync minlines=200
+autocmd FileType terraform setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd BufRead,BufNewFile *.go :set filetype=go
 autocmd BufRead,BufNewFile *.tag :set filetype=html
 autocmd BufRead,BufNewFile *.vs :set filetype=c

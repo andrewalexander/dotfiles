@@ -51,7 +51,8 @@ set updatetime=400
 set pumheight=10             " Completion window max size
 set lazyredraw               " Wait to redraw
 set noswapfile
-"set clipboard=unnamedplus
+set clipboard=unnamedplus
+
 
 " Automatically resize vim when terminal window changes
 autocmd VimResized * wincmd =
