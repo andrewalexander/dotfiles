@@ -28,8 +28,12 @@ Plug 'cocopon/iceberg.vim'
 Plug 'whatyouhide/vim-gotham'
 Plug 'dracula/vim', { 'as': 'dracula' }
 Plug 'dikiaap/minimalist'
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 call plug#end()
+
+" Disable tmux navigator when zooming the Vim pane
+let g:tmux_navigator_disable_when_zoomed = 1
 
 " ==================== ctrlp ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
