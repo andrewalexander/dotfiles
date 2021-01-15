@@ -5,13 +5,15 @@ scrolling:
   history: 50000
 font:
   normal:
-    family: FuraCodeNerdFontMono
-  size: 11.0
+    #family: FuraCodeNerdFontMono
+    family: Source Code Pro
+  size: 12.0
 colors:
-  #primary:
+  primary:
     #background: '0x212121'
-    #foreground: '0xc0c5ce'
-    #bright_foreground: '0xf3f4f5'
+    background: '0x444444'
+    foreground: '0xc0c5ce'
+    bright_foreground: '0xf3f4f5'
 
   cursor:
     text: '0x212121'
@@ -335,7 +337,7 @@ colors:
   #semantic_escape_chars: ",│`|:\"' ()[]{}<>\t"
 
   # When set to `true`, selected text will be copied to the primary clipboard.
-  #save_to_clipboard: false
+  save_to_clipboard: true
 
 # Allow terminal applications to change Alacritty's window title.
 #dynamic_title: true
@@ -606,3 +608,4 @@ colors:
   #- { key: PageDown,  mods: Shift,   action: ScrollPageDown, mode: ~Alt       }
   #- { key: Home,      mods: Shift,   action: ScrollToTop,    mode: ~Alt       }
   #- { key: End,       mods: Shift,   action: ScrollToBottom, mode: ~Alt       }
+

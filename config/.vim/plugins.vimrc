@@ -12,11 +12,12 @@ Plug 'scrooloose/nerdcommenter'
 Plug 'scrooloose/nerdtree'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
-Plug 'godlygeek/tabular'
-Plug 'Raimondi/delimitMate'
+"Plug 'godlygeek/tabular'
+"Plug 'Raimondi/delimitMate'
 Plug 'SirVer/ultisnips'
-Plug 'rust-lang/rust.vim'
+"Plug 'rust-lang/rust.vim'
 Plug 'unblevable/quick-scope'
+Plug 'bcicen/vim-vice'
 
 " Currently evaluating
 Plug 'alvan/vim-closetag'
@@ -24,11 +25,15 @@ Plug 'derekwyatt/vim-fswitch'
 Plug 'qpkorr/vim-bufkill'
 "Plug 'tpope/vim-dispatch'
 Plug 'hashivim/vim-terraform'
-Plug 'cocopon/iceberg.vim'
-Plug 'whatyouhide/vim-gotham'
-Plug 'dracula/vim', { 'as': 'dracula' }
-Plug 'dikiaap/minimalist'
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'cocopon/iceberg.vim'
+"Plug 'whatyouhide/vim-gotham'
+"Plug 'dracula/vim', { 'as': 'dracula' }
+"Plug 'dikiaap/minimalist'
+"Plug 'neoclide/coc.nvim', {'branch': 'release'}
+"Plug 'sbdchd/neoformat'
+"Plug 'flazz/vim-colorschemes'
+"Plug 'Jamedjo/setcolors.vim'
+Plug 'christianrondeau/vim-base64'
 
 call plug#end()
 
@@ -46,7 +51,7 @@ let g:bracketed_paste_tmux_wrap = 0
 
 " ==================== lightline ====================
 let g:lightline = {
-      \ 'colorscheme': 'one',
+      \ 'colorscheme': 'vice',
       \ 'enable': {
       \   'statusline': 1,
       \   'tabline': 1
@@ -75,13 +80,14 @@ autocmd! BufEnter *.cc let b:fswitchdst = 'h,hpp'
 let g:BufKillActionWhenBufferDisplayedInAnotherWindow = 'kill'
 
 " ==================== vim-go ====================
-let g:go_fmt_fail_silently = 1
+"let g:go_fmt_fail_silently = 1
 let g:go_fmt_command = "goimports"
-let g:go_autodetect_gopath = 1
-let g:go_list_type = "quickfix"
-let g:go_auto_type_info = 0
-let g:go_info_mode = "gocode"
+"let g:go_autodetect_gopath = 1
+"let g:go_list_type = "quickfix"
+"let g:go_auto_type_info = 0
+let g:go_info_mode = "gopls"
 let g:go_def_mode = "gopls"
+let g:go_gorename_command = "gopls"
 
 "let g:go_gopls_enabled = 0
 "let g:go_metalinter_autosave_enabled = []
@@ -94,17 +100,14 @@ let g:go_def_mode = "gopls"
 
 "let g:go_highlight_string_spellcheck = 0
 
-let g:go_echo_command_info = 1
-let g:go_autodetect_gopath = 1
-let g:go_echo_command_info= 0
-let g:go_highlight_extra_types = 1
-let g:go_highlight_build_constraints = 1
-let g:go_highlight_types = 1
-let g:go_highlight_fields = 1
-let g:go_highlight_functions = 1
-let g:go_highlight_methods = 1
-let g:go_highlight_operators = 1
-let g:go_auto_type_info = 0
+"let g:go_echo_command_info= 0
+"let g:go_highlight_extra_types = 0
+"let g:go_highlight_build_constraints = 1
+"let g:go_highlight_types = 1
+"let g:go_highlight_fields = 1
+"let g:go_highlight_functions = 1
+"let g:go_highlight_methods = 1
+"let g:go_highlight_operators = 1
 
 " ==================== rust.vim ====================
 let g:rustfmt_autosave = 1

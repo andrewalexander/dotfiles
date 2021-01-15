@@ -51,6 +51,7 @@ export GOSUMDB=off
 export PATH=$PATH:/usr/local/kubebuilder/bin
 export PATH=$PATH:$HOME/.linkerd2/bin
 #source <(kubectl completion bash)
+source $HOME/.securerc
 
 alias k='kubectl'
 #complete -F __start_kubectl k
@@ -60,3 +61,5 @@ alias gnw='kubectl get nodes -o wide'
 alias si='sudo -i'
 alias dnstools='kubectl run -it --rm --restart=Never --image=infoblox/dnstools:latest dnstools'
 alias jc='journalctl --no-tail -xeu'
+alias cs="cd /home/andrew/go/src/github.com/criticalstack"
+

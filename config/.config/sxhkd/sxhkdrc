@@ -1,13 +1,15 @@
 #
 # Shorcuts
 #
+XF86MonBrightnessUp 
+    exec light -A 5
 
-XF86MonBrightnessDown
-	light -U 5
-XF86MonBrightnessUp
-	light -A 5
-#XF86Audio{MicMute,Mute,RaiseVolume,LowerVolume}
-	#volume {mic,toggle,up,down}
+XF86MonBrightnessDown 
+    exec light -U 5
+
+#XF86Audio{Mute,RaiseVolume,LowerVolume}
+    #sh -c {"pactl set-sink-mute 0 toggle", "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 +5%", "pactl set-sink-mute 0 false ; pactl set-sink-volume 0 -5%"}
+
 XF86Audio{Prev,Next,Play}
 	player {prev,next,play}
 XF86AudioLowerVolume
@@ -29,46 +31,68 @@ alt + Return
 alt + @space
 	rofi -show run
 
+# reload sxhkd
+alt + shift + r
+    pkill -USR1 -x sxhkd
+
 # screenshot
 Print
 	scrot
 
-# make sxhkd reload its configuration files:
+alt + shift + F4
+    screenshot_current_window
+
+alt + shift + F5
+    screenshot_select_window
+
+alt + shift + F6
+    screenshot_select_mouse
+
+super + b
+    firefox
+
+super + g
+    gqrx
+
+super + s
+    slack
+
+super + n
+    subl3
+
 super + Escape
-	pkill -USR1 -x sxhkd
+    /home/andrew/bin/lock
 
 #
 # bspwm hotkeys
-#
+
+# quit bspwm
+alt + q
+	bspc quit
+
+# rotate
+alt + r
+	bspc node @parent -R 90
+
+# close node
+alt + w
+	bspc node -c
+
+# set the window state
+super + {t,Tab,f}
+	bspc node -t ~{tiled,floating,fullscreen}
 
 # quit/restart bspwm
 super + alt + {q,r}
 	bspc {quit,wm -r}
 
-# close and kill
-super + {_,shift + }w
-	bspc node -{c,k}
-
 # alternate between the tiled and monocle layout
 super + m
 	bspc desktop -l next
 
-# send the newest marked node to the newest preselected node
-super + y
-	bspc node newest.marked.local -n newest.!automatic.local
-
-# swap the current node and the biggest node
-super + g
-	bspc node -s biggest
-
 #
 # state/flags
 #
-
-# set the window state
-super + {t,shift + t,s,f}
-	bspc node -t '~{tiled,pseudo_tiled,floating,fullscreen}'
-	#bspc node -t {tiled,pseudo_tiled,floating,fullscreen}
 
 # set the node flags
 super + ctrl + {m,x,y,z}
@@ -78,10 +102,28 @@ super + ctrl + {m,x,y,z}
 # focus/swap
 #
 
-# focus the node in the given direction
-#super + {_,shift + }{h,j,k,l}
-#alt + {_,shift + }{h,j,k,l}
-	#bspc node -{f,s} {west,south,north,east}
+# focus {swap} the node in the given direction
+alt + {_, shift +}{h,j,k,l}
+	bspc node -{f,s} {west,south,north,east}
+
+# focus or send to the given desktop
+alt + {_,shift + }{1-9,0}
+	bspc {desktop -f,node -d} '^{1-9,10}'
+
+# focus the last node/desktop
+alt + {grave,Tab}
+	bspc {node,desktop} -f last
+
+# send the newest marked node to the newest preselected node
+alt + y
+	bspc node newest.marked.local -n newest.!automatic.local
+
+# swap the current node and the biggest node
+alt + g
+	bspc node -s biggest.local || bspc node -s last.local
+
+alt + shift + {n,p}
+	bspc desktop -f {next,prev}
 
 # focus the node for the given path jump
 super + {p,b,comma,period}
@@ -105,86 +147,29 @@ super + {o,i}
 	bspc node {older,newer} -f; \
 	bspc wm -h on
 
-# focus or send to the given desktop
-#super + {_,shift + }{1-9,0}
-	#bspc {desktop -f,node -d} '^{1-9,10}'
-
 #
 # preselect
-#
 
 # preselect the direction
-#super + ctrl + {h,j,k,l}
-	#bspc node -p {west,south,north,east}
-
-# preselect the ratio
-#super + ctrl + {1-9}
-	#bspc node -o 0.{1-9}
+alt + ctrl + {h,j,k,l}
+	bspc node -p {west,south,north,east}
 
 # cancel the preselection for the focused node
-#super + ctrl + space
-	#bspc node -p cancel
+alt + Escape
+	bspc node -p cancel
 
 # cancel the preselection for the focused desktop
-#super + ctrl + shift + space
-	#bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
+super + ctrl + shift + space
+	bspc query -N -d | xargs -I id -n 1 bspc node id -p cancel
 
 #
 # move/resize
 #
 
 # expand a window by moving one of its side outward
-#super + alt + {h,j,k,l}
-	#bspc node -z {left -20 0,bottom 0 20,top 0 -20,right 20 0}
-
-# contract a window by moving one of its side inward
-#super + alt + shift + {h,j,k,l}
-	#bspc node -z {right -20 0,top 0 20,bottom 0 -20,left 20 0}
+super + {h,j,k,l}
+	resize {west,south,north,east}
 
 # move a floating window
-#super + alt + {Left,Down,Up,Right}
 super + alt + {h,j,k,l}
 	bspc node -v {-20 0,0 20,0 -20,20 0}
-
-
-#alt + q
-    #bspc node -c
-
-#alt + shift + q
-    #bspc quit
-
-#alt + shift + {h,j,k,l}
-    #bspc node -p {west,south,north,east}
-
-#alt + Escape
-    #bspc node -p cancel
-
-super + q
-	i3lock -c 000000
-
-alt + {h,j,k,l}
-	bspc node -f {west,south,north,east}.local
-
-ctrl + super + {h,j,k,l}
-	$HOME/.config/bspwm/scripts/move {west,south,north,east}
-
-#alt + g
-	#bspc node -s biggest.local || bspc node -s last.local
-
-#alt + b
-	#bspc desktop -f last
-
-alt + {1,2,3,4,5,6,7,8,9}
-	bspc desktop -f {1-9}
-
-super + {h,j,k,l}
-	$HOME/.config/bspwm/scripts/resize {west,south,north,east}
-
-super + {_,shift} + {1,2,3,4,5}
-	bspc {desktop -f,node -d} {1-5}
-
-#super + {t,Tab,f}
-	#bspc node -t '~{tiled,floating,fullscreen}'
-
-alt + t
-	$HOME/.config/bspwm/scripts/togglebar

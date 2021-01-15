@@ -1,4 +1,4 @@
-colorscheme minimalist
+colorscheme vice
 
 hi Normal guibg=NONE ctermbg=NONE ctermfg=NONE term=NONE cterm=NONE guifg=NONE
 hi VertSplit term=NONE cterm=NONE guifg=NONE ctermbg=NONE guibg=NONE
@@ -7,6 +7,7 @@ hi EndOfBuffer ctermfg=black guifg=#444b71 guibg=NONE term=NONE cterm=NONE cterm
 
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType go setlocal ts=4 sts=4 sw=4 noexpandtab
 autocmd FileType c setlocal ts=4 sts=4 sw=4 expandtab
@@ -20,3 +21,9 @@ autocmd BufRead,BufNewFile *.tag :set filetype=html
 autocmd BufRead,BufNewFile *.vs :set filetype=c
 autocmd BufRead,BufNewFile *.vue setlocal shiftwidth=2 tabstop=2
 autocmd BufRead,BufNewFile *.jsx setlocal shiftwidth=2 tabstop=2 expandtab
+autocmd BufWritePre *.jsx Neoformat
+"autocmd BufWritePre *.js Neoformat
+autocmd BufWritePre *.css Neoformat
+
+" Fix highlighting breaking randomly
+"autocmd FileType vue syntax sync fromstart

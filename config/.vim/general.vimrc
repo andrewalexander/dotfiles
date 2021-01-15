@@ -2,12 +2,14 @@ set nocompatible
 syntax enable
 let g:rehash256 = 1
 
+set t_Co=256
 filetype off
 filetype plugin indent on
 set noshowcmd noruler
 
 set ttyfast
 set ttymouse=xterm2
+set ttyscroll=3
 
 set laststatus=2
 set encoding=utf-8              " Set default encoding to UTF-8
@@ -52,6 +54,20 @@ set pumheight=10             " Completion window max size
 set lazyredraw               " Wait to redraw
 set noswapfile
 set clipboard=unnamedplus
+"set foldenable
+"set foldlevelstart=10
+"set foldnestmax=10
+"set foldmethod=expr
+"set foldexpr=RFoldexpr(v:lnum)
+"function! RFoldexpr(lnum)
+  "if getline(a:lnum) =~ '^\("\|#\)\+\s\+=========.* SECTION$'
+	"" Start a new level-one fold
+	"return '>1'
+  "else
+	"" Use the same foldlevel as the previous line
+	"return '='
+  "endif
+"endfunction
 
 
 " Automatically resize vim when terminal window changes
