@@ -10,9 +10,10 @@ truncation_length = 8
 symbol = " "
 
 [aws]
+format = "on [$symbol$region]($style) "
 style = "bold blue"
 symbol = " "
-displayed_items = "region"
+#displayed_items = "region"
 
 [aws.region_aliases]
 ap-southeast-2 = "au"
@@ -35,12 +36,12 @@ diverged = "😵"
 stashed = "📦"
 staged.value = "++"
 staged.style = "green"
-staged_count.enabled = true
-staged_count.style = "green"
+staged.count.enabled = true
+staged.count.style = "green"
 #renamed = "👅"
 deleted = "🗑"
-modified_count = true
-show_sync_count = true
+modified.count = true
+#show_sync.count = true
 #modified = "📝"
 #untracked = "🤷‍"
 

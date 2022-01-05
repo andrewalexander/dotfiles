@@ -6,8 +6,8 @@
 web:*.{html,css,js}*
 
 # Exclude directories
---glob=!git/*
---glob=!vendor/*
+#--glob=!git/*
+#--glob=!vendor/*
 
 # Set the colors.
 --colors=line:none

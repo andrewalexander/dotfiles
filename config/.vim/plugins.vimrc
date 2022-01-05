@@ -30,7 +30,7 @@ Plug 'hashivim/vim-terraform'
 "Plug 'dracula/vim', { 'as': 'dracula' }
 "Plug 'dikiaap/minimalist'
 "Plug 'neoclide/coc.nvim', {'branch': 'release'}
-"Plug 'sbdchd/neoformat'
+Plug 'sbdchd/neoformat'
 "Plug 'flazz/vim-colorschemes'
 "Plug 'Jamedjo/setcolors.vim'
 Plug 'christianrondeau/vim-base64'
@@ -153,5 +153,5 @@ if !exists("g:UltiSnipsJumpBackwardTrigger")
   let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
 endif
 
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsExpandTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpForwardTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
 au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"

@@ -3,6 +3,8 @@
 HISTSIZE=10000
 SAVEHIST=10000
 
+export ZSH_CUSTOM="~/.oh-my-zsh/custom"
+
 stty -ixon # Disable ctrl-s and ctrl-q.
 export GOPATH=$HOME/go
 export PATH=$GOPATH/bin:$PATH

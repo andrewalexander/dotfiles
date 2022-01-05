@@ -7,6 +7,7 @@ hi EndOfBuffer ctermfg=black guifg=#444b71 guibg=NONE term=NONE cterm=NONE cterm
 
 autocmd FileType html setlocal shiftwidth=2 tabstop=2
 autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
+autocmd FileType css setlocal shiftwidth=2 tabstop=2
 autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType go setlocal ts=4 sts=4 sw=4 noexpandtab
@@ -23,7 +24,7 @@ autocmd BufRead,BufNewFile *.vue setlocal shiftwidth=2 tabstop=2
 autocmd BufRead,BufNewFile *.jsx setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd BufWritePre *.jsx Neoformat
 "autocmd BufWritePre *.js Neoformat
-autocmd BufWritePre *.css Neoformat
+"autocmd BufWritePre *.css Neoformat
 
 " Fix highlighting breaking randomly
 "autocmd FileType vue syntax sync fromstart
