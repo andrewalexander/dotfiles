@@ -6,6 +6,8 @@ clean:
 	@stow -vD --no-folding config
 
 init:
+	yay -Sy rustup cmake stow extra/fontconfig vim
+        rustup default stable
 	sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 	cargo install starship
 
