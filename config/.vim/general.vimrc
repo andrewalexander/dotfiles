@@ -8,7 +8,7 @@ filetype plugin indent on
 set noshowcmd noruler
 
 set ttyfast
-set ttymouse=xterm2
+set ttymouse=sgr
 set ttyscroll=3
 
 set laststatus=2

@@ -3,26 +3,21 @@
 HISTSIZE=10000
 SAVEHIST=10000
 
-export ZSH_CUSTOM="~/.oh-my-zsh/custom"
-
 stty -ixon # Disable ctrl-s and ctrl-q.
+export ZSH_CUSTOM="~/.oh-my-zsh/custom"
 export GOPATH=$HOME/go
-export PATH=$GOPATH/bin:$PATH
-#if [ -f /etc/bash_completion ]; then
-    #. /etc/bash_completion
-#fi
-
-export PATH=~/.npm-global/bin:$PATH
+# keep these around in case we ever run into proxy issues again
+#export GOPROXY=direct
+#export GOSUMDB=off
+export PATH=$GOPATH/bin:$HOME/.cargo/bin:$HOME/.npm-global/bin:$PATH
 export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
-export PATH=~/.cargo/bin:$PATH
-
-#export PROMPT_COMMAND='history -a; history -r'
-
 export EDITOR=/usr/bin/vim
+export TF_VAR_dev_mode=true
+export SSH_AUTH_SOCK="$(brew --prefix)/var/run/yubikey-agent.sock"
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 
-alias e="$EDITOR"
-alias p="sudo pacman"
-alias SS="sudo systemctl"
+
+# use exa on mac when available
 if command -v exa >/dev/null; then
     alias ls='exa'
     alias ll='ls -alFh --group-directories-first'
@@ -32,36 +27,23 @@ if command -v exa >/dev/null; then
 else
     alias ll='ls -alFh --group-directories-first'
 fi
-#alias ll='ls -alFh'
+
+alias e="$EDITOR"
+alias p="sudo pacman"
+alias SS="sudo systemctl"
 alias gs='git status'
 alias gd='git diff'
-alias mx='chmod +x'
-alias nst='netstat -tulpn'
-#alias vim="vim --servername vim-$(tmux display -p '#S')"
-alias r="ranger"
-alias sr="sudo ranger"
-alias ka="killall"
-alias g="git"
-
-export GO111MODULE=on
-export TF_VAR_dev_mode=true
-
-#eval "$(starship init bash)"
-
-export GOPROXY=direct
-export GOSUMDB=off
-export PATH=$PATH:/usr/local/kubebuilder/bin
-export PATH=$PATH:$HOME/.linkerd2/bin
-#source <(kubectl completion bash)
-source $HOME/.securerc
-
-alias k='kubectl'
-#complete -F __start_kubectl k
+alias nst='netstat -tunlp' # "tunnel p"
 alias gp='kubectl get pods --all-namespaces'
 alias gn='kubectl get nodes'
 alias gnw='kubectl get nodes -o wide'
 alias si='sudo -i'
 alias dnstools='kubectl run -it --rm --restart=Never --image=infoblox/dnstools:latest dnstools'
 alias jc='journalctl --no-tail -xeu'
-alias cs="cd /home/andrew/go/src/github.com/criticalstack"
+# keeping this around for nostalgia - doing dev work in tmux on shared ec2s 🥲
+#alias vim="vim --servername vim-$(tmux display -p '#S')"
 
+#source <(kubectl completion bash)
+source $HOME/.securerc
+
+mkgif() { ffmpeg -i $1 -filter_complex "[0:v] fps=12,scale=width=1080:height=-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" -f gif $2 }

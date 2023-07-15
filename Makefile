@@ -14,6 +14,7 @@ init:
 init-mac: init
 	brew install rust
 	brew install exa
+	brew install koekeishiya/formulae/yabai
 
 plugins:
 	git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/custom/plugins/zsh-autosuggestions

@@ -6,6 +6,4 @@ Use the arch gvim package even for vim so that it gets compiled with `+clipboard
 cargo install starship
 ```
 
-Uses pulseaudio
 
-tbd blah

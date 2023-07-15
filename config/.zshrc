@@ -1,6 +1,5 @@
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
-export SSH_AUTH_SOCK="$(brew --prefix)/var/run/yubikey-agent.sock"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/andrewalexander/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/andrewalexander/google-cloud-sdk/path.zsh.inc'; fi
@@ -36,8 +35,6 @@ source $ZSH/oh-my-zsh.sh
 # VIM mode
 export KEYTIMEOUT=20
 
-
-
 bindkey -v
 bindkey -M viins 'jk' vi-cmd-mode
 bindkey '^P' up-history
@@ -64,7 +61,8 @@ bindkey '^ ' autosuggest-accept
 bindkey '^[M' autosuggest-execute
 
 source $HOME/.shellrc
-#source $ZSH_CUSTOM/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 
+# enable extended globbing for cfn-lint and other tools
+setopt extended_glob
 
 eval "$(starship init zsh)"
