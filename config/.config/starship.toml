@@ -34,15 +34,16 @@ conflicted = "🏳"
 behind = "😰"
 diverged = "😵"
 stashed = "📦"
-staged.value = "++"
-staged.style = "green"
-staged.count.enabled = true
-staged.count.style = "green"
+staged = "++"
+#staged.value = "++"
+#staged.style = "green"
+#staged.count.enabled = true
+#staged.count.style = "green"
 #renamed = "👅"
 deleted = "🗑"
-modified.count = true
+#modified.count = true
 #show_sync.count = true
-#modified = "📝"
+modified = "📝"
 #untracked = "🤷‍"
 
 [ruby]
