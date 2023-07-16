@@ -14,7 +14,7 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 "Plug 'godlygeek/tabular'
 Plug 'Raimondi/delimitMate'
-Plug 'SirVer/ultisnips'
+"Plug 'SirVer/ultisnips'
 "Plug 'rust-lang/rust.vim'
 Plug 'unblevable/quick-scope'
 Plug 'bcicen/vim-vice'
@@ -120,38 +120,38 @@ let g:delimitMate_expand_inside_quotes = 0
 "let g:delimitMate_smart_matchpairs = '^\%(\w\|\$\)'
 
 " ==================== UltiSnips ====================
-function! g:UltiSnips_Complete()
-  call UltiSnips#ExpandSnippet()
-  if g:ulti_expand_res == 0
-    if pumvisible()
-      return "\<C-n>"
-    else
-      call UltiSnips#JumpForwards()
-      if g:ulti_jump_forwards_res == 0
-        return "\<TAB>"
-      endif
-    endif
-  endif
-  return ""
-endfunction
+"function! g:UltiSnips_Complete()
+  "call UltiSnips#ExpandSnippet()
+  "if g:ulti_expand_res == 0
+    "if pumvisible()
+      "return "\<C-n>"
+    "else
+      "call UltiSnips#JumpForwards()
+      "if g:ulti_jump_forwards_res == 0
+        "return "\<TAB>"
+      "endif
+    "endif
+  "endif
+  "return ""
+"endfunction
 
-function! g:UltiSnips_Reverse()
-  call UltiSnips#JumpBackwards()
-  if g:ulti_jump_backwards_res == 0
-    return "\<C-P>"
-  endif
+"function! g:UltiSnips_Reverse()
+  "call UltiSnips#JumpBackwards()
+  "if g:ulti_jump_backwards_res == 0
+    "return "\<C-P>"
+  "endif
 
-  return ""
-endfunction
+  "return ""
+"endfunction
 
 
-if !exists("g:UltiSnipsJumpForwardTrigger")
-  let g:UltiSnipsJumpForwardTrigger = "<tab>"
-endif
+"if !exists("g:UltiSnipsJumpForwardTrigger")
+  "let g:UltiSnipsJumpForwardTrigger = "<tab>"
+"endif
 
-if !exists("g:UltiSnipsJumpBackwardTrigger")
-  let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-endif
+"if !exists("g:UltiSnipsJumpBackwardTrigger")
+  "let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+"endif
 
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpForwardTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
-au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
+"au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpForwardTrigger . " <C-R>=g:UltiSnips_Complete()<cr>"
+"au InsertEnter * exec "inoremap <silent> " . g:UltiSnipsJumpBackwardTrigger . " <C-R>=g:UltiSnips_Reverse()<cr>"
