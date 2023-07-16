@@ -15,6 +15,8 @@ init-mac: init
 	brew install rust
 	brew install exa
 	brew install koekeishiya/formulae/yabai
+	brew install skhd
+	brew services restart skhd
 
 plugins:
 	git clone https://github.com/zsh-users/zsh-autosuggestions.git ~/.oh-my-zsh/plugins/zsh-autosuggestions
