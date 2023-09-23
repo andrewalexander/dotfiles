@@ -16,6 +16,7 @@ init-mac:
 	source "$HOME/.cargo/env"
 	brew install stow cmake exa tmux koekeishiya/formulae/yabai skhd
 	skhd --start-service
+	yabai --start-service
 	rustup default stable
 	curl -sSfL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh
 	cargo install starship
