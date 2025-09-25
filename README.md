@@ -23,6 +23,19 @@ make install
 make plugins
 ```
 
+## Trackpad scroll direction
+For some reason the magic trackpad didn't respect the settings in the UI. Adding this to `/etc/X11/xorg.conf.d/30-touchpad.conf` made it work and persist
+
+```
+Section "InputClass"
+    Identifier "touchpad"
+    Driver "libinput"
+    MatchIsTouchpad "on"
+    Option "Tapping" "on"
+    Option "NaturalScrolling" "false"
+EndSection
+```
+
 ## Notes
 Uses the arch gvim package even for vim so that it gets compiled with `+clipboard` and can use the system clipboard which alacritty is also configured to share.
 
