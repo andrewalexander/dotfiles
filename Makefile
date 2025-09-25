@@ -6,10 +6,8 @@ clean:
 	@stow -vD --no-folding config
 
 init:
-	yay -Sy rustup cmake stow extra/fontconfig gvim
+	yay -Sy rustup cmake stow extra/zip extra/fontconfig gvim tailscale ncat extra/nmap bind core/net-tools tilt-bin minikube extra/helm extra/docker ctlptl-bin extra/jq extra/aws-cli-v2 extra/dbeaver extra/nodejs-lts-jod nvm
 	rustup default stable
-	curl -sSfL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh | sh
-	cargo install starship
 
 init-mac: 
 	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh

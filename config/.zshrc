@@ -1,19 +1,19 @@
 # Path to your oh-my-zsh installation.
-export ZSH="$HOME/.oh-my-zsh"
+#export ZSH="$HOME/.oh-my-zsh"
 
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/andrewalexander/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/andrewalexander/google-cloud-sdk/path.zsh.inc'; fi
+#if [ -f '/Users/andrewalexander/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/andrewalexander/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/andrewalexander/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/andrewalexander/google-cloud-sdk/completion.zsh.inc'; fi
+#if [ -f '/Users/andrewalexander/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/andrewalexander/google-cloud-sdk/completion.zsh.inc'; fi
 
-ZSH_THEME="robbyrussell"
+#ZSH_THEME="robbyrussell"
 
 plugins=(
   archlinux
   aws
   colored-man-pages
-  git
+  #git
   history-substring-search
   kubectl
   vi-mode
@@ -30,7 +30,7 @@ compinit
 # Include hidden files in autocomplete:
 _comp_options+=(globdots)
 
-source $ZSH/oh-my-zsh.sh
+#source $ZSH/oh-my-zsh.sh
 
 # VIM mode
 export KEYTIMEOUT=20
@@ -65,4 +65,23 @@ source $HOME/.shellrc
 # enable extended globbing for cfn-lint and other tools
 setopt extended_glob
 
-eval "$(starship init zsh)"
+# Use powerline
+USE_POWERLINE="true"
+# Has weird character width
+# Example:
+#    is not a diamond
+HAS_WIDECHARS="false"
+# Source manjaro-zsh-configuration
+if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
+  source /usr/share/zsh/manjaro-zsh-config
+fi
+# Use manjaro zsh prompt
+if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
+  source /usr/share/zsh/manjaro-zsh-prompt
+fi
+
+# nvm
+source /usr/share/nvm/init-nvm.sh
+
+#eval "$(starship init zsh)"
+#eval "$(ssh-agent -s)"

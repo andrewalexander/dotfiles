@@ -1,7 +1,7 @@
 call plug#begin('~/.vim/plugged')
 
-Plug 'benmills/vimux'
-Plug 'christoomey/vim-tmux-navigator'
+"Plug 'benmills/vimux'
+"Plug 'christoomey/vim-tmux-navigator'
 Plug 'ConradIrwin/vim-bracketed-paste'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'farmergreg/vim-lastplace'
@@ -38,7 +38,7 @@ Plug 'christianrondeau/vim-base64'
 call plug#end()
 
 " Disable tmux navigator when zooming the Vim pane
-let g:tmux_navigator_disable_when_zoomed = 1
+"let g:tmux_navigator_disable_when_zoomed = 1
 
 " ==================== ctrlp ====================
 let g:ctrlp_cmd = 'CtrlPMRU'
@@ -47,7 +47,7 @@ let g:ctrlp_cmd = 'CtrlPMRU'
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 
 " ==================== vim-bracketed-paste ====================
-let g:bracketed_paste_tmux_wrap = 0
+"let g:bracketed_paste_tmux_wrap = 0
 
 " ==================== lightline ====================
 let g:lightline = {
