@@ -4,18 +4,8 @@ HISTSIZE=10000
 SAVEHIST=10000
 
 stty -ixon # Disable ctrl-s and ctrl-q.
-export ZSH_CUSTOM="~/.oh-my-zsh/custom"
-export GOPATH=$HOME/go
-# keep these around in case we ever run into proxy issues again
-#export GOPROXY=direct
-#export GOSUMDB=off
-export PATH=$GOPATH/bin:$HOME/.cargo/bin:$HOME/.npm-global/bin:$PATH
 export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
-export EDITOR=/usr/bin/vim
-export TF_VAR_dev_mode=true
-#export SSH_AUTH_SOCK="$(brew --prefix)/var/run/yubikey-agent.sock"
-export USE_GKE_GCLOUD_AUTH_PLUGIN=True
-
+export EDITOR=vim
 
 # use exa on mac when available
 if command -v exa >/dev/null; then
@@ -34,19 +24,12 @@ alias SS="sudo systemctl"
 alias gs='git status'
 alias gd='git diff'
 alias nst='netstat -tunlp' # "tunnel p"
-alias gp='kubectl get pods --all-namespaces'
-alias gn='kubectl get nodes'
-alias gnw='kubectl get nodes -o wide'
 alias si='sudo -i'
 alias dnstools='kubectl run -it --rm --restart=Never --image=infoblox/dnstools:latest dnstools'
 alias jc='journalctl --no-tail -xeu'
 # keeping this around for nostalgia - doing dev work in tmux on shared ec2s 🥲
 #alias vim="vim --servername vim-$(tmux display -p '#S')"
 
-#source <(kubectl completion bash)
 #source $HOME/.securerc
-mkube() { eval "$(minikube docker-env)" }
 mkssh() { eval "$(ssh-agent -s)" }
-
-
 mkgif() { ffmpeg -i $1 -filter_complex "[0:v] fps=12,scale=width=1080:height=-1,split [a][b];[a] palettegen [p];[b][p] paletteuse" -f gif $2 }

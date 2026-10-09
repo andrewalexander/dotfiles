@@ -1,36 +1,29 @@
-# Path to your oh-my-zsh installation.
-#export ZSH="$HOME/.oh-my-zsh"
+# homebrew pkgs in path + completion for zsh
+export PATH="$HOME/.local/bin:$PATH"
+eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 
-# The next line updates PATH for the Google Cloud SDK.
-#if [ -f '/Users/andrewalexander/google-cloud-sdk/path.zsh.inc' ]; then . '/Users/andrewalexander/google-cloud-sdk/path.zsh.inc'; fi
+# go's protoc path
+export PATH="$HOME/go/bin:$PATH"
+export GOPRIVATE="github.com/helmet-sh/*"
+export GOPATH=$HOME/go
+# keep these around in case we ever run into proxy issues again
+#export GOPROXY=direct
+#export GOSUMDB=off
 
-# The next line enables shell command completion for gcloud.
-#if [ -f '/Users/andrewalexander/google-cloud-sdk/completion.zsh.inc' ]; then . '/Users/andrewalexander/google-cloud-sdk/completion.zsh.inc'; fi
+# nvm's path + completion
+export NVM_DIR="$HOME/.nvm" # without this, we lose our stuff every upgrade 
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
 
-#ZSH_THEME="robbyrussell"
+# rust's path
+export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 
-plugins=(
-  archlinux
-  aws
-  colored-man-pages
-  #git
-  history-substring-search
-  kubectl
-  vi-mode
-  zsh-autosuggestions
-  zsh-navigation-tools
-  zsh-syntax-highlighting
-)
+# source aliases and the like from .shellrc
+source $HOME/.shellrc
 
-autoload -U compinit
-zstyle ':completion:*' menu select
-zmodload zsh/complist
-compinit
+# enable extended globbing for cfn-lint and other tools
+setopt extended_glob
 
-# Include hidden files in autocomplete:
-_comp_options+=(globdots)
-
-#source $ZSH/oh-my-zsh.sh
 
 # VIM mode
 export KEYTIMEOUT=20
@@ -47,11 +40,11 @@ bindkey -M vicmd 'H' beginning-of-line
 bindkey -M vicmd 'L' end-of-line
 
 # Use vim keys in tab complete menu:
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-bindkey -v '^?' backward-delete-char
+#bindkey -M menuselect 'h' vi-backward-char
+#bindkey -M menuselect 'k' vi-up-line-or-history
+#bindkey -M menuselect 'l' vi-forward-char
+#bindkey -M menuselect 'j' vi-down-line-or-history
+#bindkey -v '^?' backward-delete-char
 
 # Ctrl+Space accept autosuggestions
 bindkey '^ ' autosuggest-accept
@@ -60,28 +53,3 @@ bindkey '^ ' autosuggest-accept
 # Requires terminal to rebind ctrl+enter to escape sequence
 bindkey '^[M' autosuggest-execute
 
-source $HOME/.shellrc
-
-# enable extended globbing for cfn-lint and other tools
-setopt extended_glob
-
-# Use powerline
-USE_POWERLINE="true"
-# Has weird character width
-# Example:
-#    is not a diamond
-HAS_WIDECHARS="false"
-# Source manjaro-zsh-configuration
-if [[ -e /usr/share/zsh/manjaro-zsh-config ]]; then
-  source /usr/share/zsh/manjaro-zsh-config
-fi
-# Use manjaro zsh prompt
-if [[ -e /usr/share/zsh/manjaro-zsh-prompt ]]; then
-  source /usr/share/zsh/manjaro-zsh-prompt
-fi
-
-# nvm
-source /usr/share/nvm/init-nvm.sh
-
-#eval "$(starship init zsh)"
-#eval "$(ssh-agent -s)"

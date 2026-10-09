@@ -13,14 +13,18 @@ brew install git
 git clone https://github.com/andrewalexander/dotfiles
 ```
 
-Install [alacritty](https://alacritty.org/) or [iTerm](https://iterm2.com/index.html) for terminal
+Ghostty - should be installed by home-manager
+otherwise (https://ghostty.org/docs/install/binary#macos)
+`brew install --cask ghostty`
+~~Install [alacritty](https://alacritty.org/) or [iTerm](https://iterm2.com/index.html) for terminal~~
 
 ## Installation
 ```
 # make init # for linux
 make init-mac # for mac
-make install
-make plugins
+# make install
+# make plugins
+home-manager switch
 ```
 
 ## Trackpad scroll direction
