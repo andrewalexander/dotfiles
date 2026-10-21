@@ -24,18 +24,52 @@ source $HOME/.shellrc
 # enable extended globbing for cfn-lint and other tools
 setopt extended_glob
 
+# plugins
+source ~/.zplug/init.zsh
+
+zplug "zsh-users/zsh-autosuggestions" 
+
+#plugins=(
+  #archlinux
+  #aws
+  #colored-man-pages
+  #git
+  #history-substring-search
+  #kubectl
+  #vi-mode
+  #zsh-autosuggestions
+  #zsh-navigation-tools
+  #zsh-syntax-highlighting
+#
+#
+## Grab binaries from GitHub Releases
+# and rename with the "rename-to:" tag
+#zplug "junegunn/fzf", \
+    #from:gh-r, \
+    #as:command, \
+    #use:"*darwin*amd64*"
+#
+## Supports oh-my-zsh plugins and the like
+#zplug "plugins/git",   from:oh-my-zsh
+
+# load them after we zplug them
+#zplug load --verbose
+zplug load 
 
 # VIM mode
 export KEYTIMEOUT=20
 
 bindkey -v
 bindkey -M viins 'jk' vi-cmd-mode
+bindkey -M viins '^a' beginning-of-line
+bindkey -M viins '^e' end-of-line
 bindkey '^P' up-history
 bindkey '^N' down-history
 bindkey '^?' backward-delete-char
 bindkey '^h' backward-delete-char
 bindkey '^w' backward-kill-word
 bindkey '^r' history-incremental-search-backward
+#bindkey '^s' history-incremental-search-forward
 bindkey -M vicmd 'H' beginning-of-line
 bindkey -M vicmd 'L' end-of-line
 
@@ -53,3 +87,4 @@ bindkey '^ ' autosuggest-accept
 # Requires terminal to rebind ctrl+enter to escape sequence
 bindkey '^[M' autosuggest-execute
 
+export AWS_DEFAULT_PROFILE=dev-admin

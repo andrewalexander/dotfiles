@@ -10,6 +10,7 @@
 
   home.packages = [
   	ghostty-bin
+	zplug
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage
@@ -28,7 +29,7 @@
 
 	".zshrc".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc";
 	".shellrc".source = "${config.home.homeDirectory}/dotfiles/config/.shellrc";
-	".ripgreprc".source = "${config.home.homeDirectory}/dotfiles/config/.shellrc";
+	".ripgreprc".source = "${config.home.homeDirectory}/dotfiles/config/.ripgreprc";
     # # You can also set the file content immediately.
     # ".gradle/gradle.properties".text = ''
     #   org.gradle.console=verbose

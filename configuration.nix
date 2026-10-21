@@ -46,9 +46,14 @@ in
 		"protobuf"
 		"rustup"
 		"vault"
+		"ripgrep"
+		"esbuild"
 	];
 	homebrew.casks = [
 		"orbstack"
+		"sublime-text"
+		"1password"
+		"dbeaver-community"
 	];
 	homebrew.goPackages = [
 		"google.golang.org/protobuf/cmd/protoc-gen-go"
@@ -61,6 +66,7 @@ in
 		pkgs.firefox
 		pkgs.google-chrome
 		pkgs.orbstack
+		pkgs.zplug
 	];
 
 	# unfree stuff gets allowlisted individually

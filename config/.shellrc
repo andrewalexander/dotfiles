@@ -3,7 +3,7 @@
 HISTSIZE=10000
 SAVEHIST=10000
 
-stty -ixon # Disable ctrl-s and ctrl-q.
+#stty -ixon # Disable ctrl-s and ctrl-q.
 export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
 export EDITOR=vim
 
