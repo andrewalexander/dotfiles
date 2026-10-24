@@ -90,10 +90,18 @@ in
   # goes through KDE (plasma-manager, in home-manager) or libinput quirks
   # files, not this option.
 
+  # zsh itself is configured by home-manager (programs.zsh + the zplug
+  # module in nixos-home.nix). The only part that has to live at the system
+  # level is making it a legal login shell: /etc/shells and the passwd entry
+  # are not writable from home-manager. Deliberately not programs.zsh.enable,
+  # which would pull in system-wide zsh integration we do not want.
+  environment.shells = [ pkgs.zsh ];
+
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."andrew" = {
     isNormalUser = true;
     description = "Andrew ";
+    shell = pkgs.zsh;
     extraGroups = [ "networkmanager" "wheel" ];
     packages = with pkgs; [
 	musescore

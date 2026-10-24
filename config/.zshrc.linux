@@ -1,0 +1,5 @@
+# linux-only zsh config. Sourced from programs.zsh.initContent in
+# nixos-home.nix, after home-manager's zplug block and ~/.zshrc.shared.
+#
+# Nothing needed here yet - the seam exists so linux-specific bits have an
+# obvious home instead of being guarded inside the shared file.

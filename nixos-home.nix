@@ -37,7 +37,10 @@ in
 	".vim/style.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/style.vimrc";
 	".vim/plugins.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/plugins.vimrc";
 
-	".zshrc".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc";
+	# no ".zshrc" here - programs.zsh below generates it, and the two
+	# would collide. it sources these two instead.
+	".zshrc.shared".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc";
+	".zshrc.linux".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc.linux";
 	".shellrc".source = "${config.home.homeDirectory}/dotfiles/config/.shellrc";
 	".ripgreprc".source = "${config.home.homeDirectory}/dotfiles/config/.ripgreprc";
     # # You can also set the file content immediately.
@@ -65,6 +68,30 @@ in
   #
   home.sessionVariables = {
     EDITOR="vim";
+  };
+
+  # zsh, owned by home-manager. The system config only does the minimum
+  # needed to make zsh a legal login shell (environment.shells + the passwd
+  # entry), which home-manager cannot do itself.
+  #
+  # zplug comes from the upstream module rather than hand-rolled sourcing:
+  # it sets ZPLUG_HOME=~/.zplug (writable - zplug clones plugin repos into
+  # it) and sources init.zsh from the read-only store package. Doing this by
+  # hand got ZPLUG_HOME pointed at the store, which fails on cache writes.
+  programs.zsh = {
+    enable = true;
+
+    zplug = {
+      enable = true;
+      plugins = [ { name = "zsh-users/zsh-autosuggestions"; } ];
+    };
+
+    # Ordered after the zplug block (mkOrder 550) so the autosuggest
+    # bindkeys in .zshrc.shared have the plugin available.
+    initContent = ''
+      source $HOME/.zshrc.shared
+      source $HOME/.zshrc.linux
+    '';
   };
 
   # KDE Plasma settings, managed declaratively.
