@@ -1,0 +1,37 @@
+# mac zsh entry point - deployed as ~/.zshrc on the mac.
+# Homebrew-specific setup plus zplug, then the shared portable config.
+
+# homebrew pkgs in path + completion for zsh
+eval "$(/opt/homebrew/bin/brew shellenv zsh)"
+
+# nvm's path + completion
+export NVM_DIR="$HOME/.nvm" # without this, we lose our stuff every upgrade
+[ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
+[ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+
+# rust's path
+export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
+
+# plugins - zplug is cloned into ~/.zplug here. on linux home-manager's
+# programs.zsh.zplug module handles this instead.
+export ZPLUG_HOME=~/.zplug
+source $ZPLUG_HOME/init.zsh
+
+zplug "zsh-users/zsh-autosuggestions"
+
+## Grab binaries from GitHub Releases
+# and rename with the "rename-to:" tag
+#zplug "junegunn/fzf", \
+    #from:gh-r, \
+    #as:command, \
+    #use:"*darwin*amd64*"
+#
+## Supports oh-my-zsh plugins and the like
+#zplug "plugins/git",   from:oh-my-zsh
+
+# load them after we zplug them
+#zplug load --verbose
+zplug load
+
+# shared config last - its autosuggest bindkeys need the plugin loaded
+source $HOME/.zshrc.shared

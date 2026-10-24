@@ -27,7 +27,10 @@
 	".vim/style.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/style.vimrc";
 	".vim/plugins.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/plugins.vimrc";
 
-	".zshrc".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc";
+	# .zshrc.mac is the entry point here (homebrew/nvm/rustup + zplug from
+	# ~/.zplug); it sources .zshrc.shared at the end.
+	".zshrc".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc.mac";
+	".zshrc.shared".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc";
 	".shellrc".source = "${config.home.homeDirectory}/dotfiles/config/.shellrc";
 	".ripgreprc".source = "${config.home.homeDirectory}/dotfiles/config/.ripgreprc";
     # # You can also set the file content immediately.
