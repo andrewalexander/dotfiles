@@ -27,6 +27,22 @@ make init-mac # for mac
 home-manager switch
 ```
 
+## Keeping system configs in sync
+
+`nixos-configuration.nix`, `configuration.nix`, `nixos-home.nix`, and
+`home.nix` are tracked here but need to land at OS-specific locations to
+actually take effect. Edit the repo copy, then sync it out with one command:
+
+```
+make sync-linux  # nixos-configuration.nix -> /etc/nixos/configuration.nix
+                 # nixos-home.nix -> ~/.config/home-manager/home.nix
+make sync-mac    # configuration.nix -> /etc/nix-darwin/configuration.nix
+                 # home.nix -> ~/.config/home-manager/home.nix
+```
+
+Then apply with `sudo nixos-rebuild switch` / `sudo darwin-rebuild switch` and
+`home-manager switch` as appropriate.
+
 ## Trackpad scroll direction
 For some reason the magic trackpad didn't respect the settings in the UI. Adding this to `/etc/X11/xorg.conf.d/30-touchpad.conf` made it work and persist
 

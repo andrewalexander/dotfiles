@@ -27,6 +27,12 @@ alias nst='netstat -tunlp' # "tunnel p"
 alias si='sudo -i'
 alias dnstools='kubectl run -it --rm --restart=Never --image=infoblox/dnstools:latest dnstools'
 alias jc='journalctl --no-tail -xeu'
+# framework 12: the ILIT2901 digitizer periodically floods the kernel with
+# "i2c_hid_get_input: incomplete report", which shows up as phantom double
+# taps, sticky clicks and a jumping cursor. rebinding the driver clears it.
+alias fix-touch='sudo rmmod hid_multitouch && sudo modprobe hid_multitouch'
+# count the errors above - rises while the digitizer is misbehaving, 0 when healthy
+alias touch-errs='journalctl --since "60 sec ago" | grep -c "incomplete report"'
 # keeping this around for nostalgia - doing dev work in tmux on shared ec2s 🥲
 #alias vim="vim --servername vim-$(tmux display -p '#S')"
 

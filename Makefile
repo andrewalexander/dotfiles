@@ -1,4 +1,20 @@
-init-nix: 
+init-nix:
+
+sync-nixos:
+	sudo cp nixos-configuration.nix /etc/nixos/configuration.nix
+
+sync-darwin:
+	sudo cp configuration.nix /etc/nix-darwin/configuration.nix
+
+sync-home-linux:
+	cp nixos-home.nix ~/.config/home-manager/home.nix
+
+sync-home-mac:
+	cp home.nix ~/.config/home-manager/home.nix
+
+sync-linux: sync-nixos sync-home-linux
+
+sync-mac: sync-darwin sync-home-mac
 
 install:
 	@stow -vS --no-folding config
