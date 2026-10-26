@@ -36,13 +36,13 @@ pkgs.stdenv.mkDerivation {
     pkgs.nss
     pkgs.pango
     pkgs.systemd
-    pkgs.xorg.libX11
-    pkgs.xorg.libXcomposite
-    pkgs.xorg.libXdamage
-    pkgs.xorg.libXext
-    pkgs.xorg.libXfixes
-    pkgs.xorg.libXrandr
-    pkgs.xorg.libxcb
+    pkgs.libx11
+    pkgs.libxcomposite
+    pkgs.libxdamage
+    pkgs.libxext
+    pkgs.libxfixes
+    pkgs.libxrandr
+    pkgs.libxcb
   ];
 
   unpackPhase = ''
@@ -93,6 +93,13 @@ pkgs.stdenv.mkDerivation {
             pkgs.systemd
         ]}" \
         --add-flags "--no-sandbox"
+
+      # The vendor .desktop hardcodes Exec=/opt/iRealPro/irealpro, which does
+      # not exist here. Point it at the wrapper so the launcher entry works.
+      if [ -f $out/share/applications/irealpro.desktop ]; then
+        substituteInPlace $out/share/applications/irealpro.desktop \
+          --replace "/opt/iRealPro/irealpro" "$out/bin/irealpro"
+      fi
     fi
   '';
 
