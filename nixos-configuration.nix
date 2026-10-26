@@ -20,12 +20,62 @@ in
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Run the latest upstream kernel rather than nixpkgs' default. Hardware
-  # vendors routinely need HID/driver fixes landed upstream before they
-  # reach older kernels - relevant here since the ILIT2901 touchscreen hits
-  # a known i2c-hid/hid_field_extract class of bug. Reversible via the
-  # systemd-boot menu (old generation/kernel) if 7.3 regresses anything.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # Pinned deliberately rather than linuxPackages_latest. The ILIT2901
+  # touchscreen fault is still being bisected, and `nixos-rebuild --upgrade`
+  # silently rolling the kernel forward makes that unfalsifiable - every
+  # journal we have is already 7.3.0, so there is no baseline to compare to.
+  # Pinned AT the running version on purpose: this freezes the kernel without
+  # introducing a version change, so the cable-reseat test moves exactly one
+  # variable.
+  #
+  # The fault is a corrupt 2-byte length prefix on i2c-hid reads. Root-caused
+  # 2026-10-24: byte 0 of that prefix arrives zeroed, all-ones or bit-shifted
+  # while the report payload behind it is intact. Not fixed by any kernel
+  # version - it is absent from torvalds/master and hid.git for-next as of
+  # 2026-10-24 - so bisecting kernels would not have found it.
+  # linuxPackages_7_0 .. _7_3 are all in the channel if a version test is ever
+  # wanted. Reversible via the systemd-boot menu.
+  #
+  # Correction to an earlier note here: hid_field_extract() DOES warn on this
+  # machine ("called with n (64) > 32!"). It is harmless - RID 13 declares a
+  # 64-bit Transducer Serial field, so it is a static descriptor property, and
+  # it is hid_warn_once so it carries no frequency information. It is unrelated
+  # to the length-prefix fault.
+  boot.kernelPackages = pkgs.linuxPackages_7_3;
+
+  # Workaround for the ILIT2901 length-prefix fault described above. Measured
+  # over 695 traced i2c reads: only 20.9% carried the correct 0x0042, and in
+  # 99.3% of the bad ones ONLY byte 0 differed, payload intact.
+  #
+  # i2c_hid_get_input() checks that prefix against wMaxInputLength but never
+  # against the size the report descriptor declares, so in-range garbage is
+  # accepted and hid_report_raw_event() zero-fills the absent tail. Fields that
+  # never arrived read as 0 - hence phantom pen-ups, double-presses and the
+  # jumping cursor. The patch trusts the descriptor over the prefix, but only
+  # when the payload actually changed, and drops reads carrying a truncated
+  # report followed by the next one.
+  #
+  # One slow stylus drag, before -> after, verified across two runs:
+  #   short reports 197/1000 -> 0   | isolated zeros X/Y/P 13/22/33 -> 0/0/1
+  #   spurious BTN_TOUCH 22 -> 4    | throughput 95/s -> 115-146/s
+  # Throughput ROSE, so reports are recovered rather than suppressed.
+  # Full data and the ruled-out hypotheses: ~/cap/ili2901-fix/README.md
+  #
+  # This does NOT fix the total dropouts. Traced during one: zero i2c
+  # transfers to the digitizer for 67s while the touchpad on i2c-17 kept
+  # working - the device stops asserting its interrupt, so no driver-side
+  # change can recover data that never arrives. fix-touch (transport rebind)
+  # remains the only mitigation for that.
+  #
+  # Cost: any kernelPatches entry forces a local kernel build, so
+  # nixos-rebuild takes ~30-60 min here and misses the binary cache.
+  # The patch file must be synced to /etc/nixos too - see `make sync-nixos`.
+  boot.kernelPatches = [
+    {
+      name = "i2c-hid-ili2901-unreliable-input-size";
+      patch = ./patches/i2c-hid-ili2901-unreliable-input-size.patch;
+    }
+  ];
 
   networking.hostName = "ye-olde-framework12"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.

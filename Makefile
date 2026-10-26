@@ -2,6 +2,8 @@ init-nix:
 
 sync-nixos:
 	sudo cp nixos-configuration.nix /etc/nixos/configuration.nix
+	sudo mkdir -p /etc/nixos/patches
+	sudo cp patches/*.patch /etc/nixos/patches/
 
 sync-darwin:
 	sudo cp configuration.nix /etc/nix-darwin/configuration.nix
