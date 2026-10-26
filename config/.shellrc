@@ -27,12 +27,77 @@ alias nst='netstat -tunlp' # "tunnel p"
 alias si='sudo -i'
 alias dnstools='kubectl run -it --rm --restart=Never --image=infoblox/dnstools:latest dnstools'
 alias jc='journalctl --no-tail -xeu'
-# framework 12: the ILIT2901 digitizer periodically floods the kernel with
-# "i2c_hid_get_input: incomplete report", which shows up as phantom double
-# taps, sticky clicks and a jumping cursor. rebinding the driver clears it.
-alias fix-touch='sudo rmmod hid_multitouch && sudo modprobe hid_multitouch'
-# count the errors above - rises while the digitizer is misbehaving, 0 when healthy
-alias touch-errs='journalctl --since "60 sec ago" | grep -c "incomplete report"'
+# framework 12: the ILIT2901 digitizer returns reports whose 2-byte length
+# prefix is corrupt. i2c-hid logs this as "incomplete report (buf/claimed)"
+# and drops the report, which surfaces as phantom double taps, sticky clicks
+# and a jumping cursor. two distinct signatures - only the second matters:
+#   (64/66)     benign. probe-time only: buffer is still HID_MIN_BUFFER_SIZE
+#               while the real report is 66 bytes. stops after realloc.
+#   (66/<junk>) the fault. buffer is correct, but the device's claimed length
+#               comes back as 1, 95, 192, 16896 ... different every time.
+#               random values => corruption on the wire, NOT a fixed
+#               protocol mismatch that a kernel quirk could patch.
+#
+# reset the digitizer at the transport layer (i2c_hid_acpi), touching only
+# ILIT2901. the old rmmod/modprobe hid_multitouch unbound the PIXA3854
+# touchpad too, and could never affect this fault anyway: corrupt reports are
+# dropped inside i2c_hid_get_input and never reach hid_multitouch.
+# this clears a WEDGED digitizer. it does not stop the corruption.
+fix-touch() {
+  local d=/sys/bus/i2c/drivers/i2c_hid_acpi
+  # the device name carries the "i2c-" prefix, as listed in $d
+  echo -n i2c-ILIT2901:00 | sudo tee $d/unbind >/dev/null || return 1
+  sleep 1
+  echo -n i2c-ILIT2901:00 | sudo tee $d/bind   >/dev/null
+}
+
+# errors fire ONLY while the screen is being touched, so touch the screen for
+# the whole window or this reads 0 and means nothing. splits the signatures
+# rather than lumping benign probe noise in with real faults.
+touch-errs() {
+  local since="${1:-5 min ago}"
+  echo "window: $since"
+  journalctl -k --since "$since" \
+    | grep -oE 'incomplete report \([0-9]+/[0-9]+\)' \
+    | sort | uniq -c | sort -rn
+}
+
+# live follow - run this, then drag a finger around the screen.
+# NOTE: silence here does NOT mean healthy - see touch-irq.
+touch-watch() {
+  journalctl -kf | grep --line-buffered -oE \
+    'incomplete report \([0-9]+/[0-9]+\)'
+}
+
+# THE primary health metric - better than touch-errs, because the worst
+# failure mode is SILENT. when the digitizer's report length field reads 0,
+# i2c_hid_get_input treats it as "RESET completed" and returns without
+# logging anything: the IRQ line hammers, no input events are produced, and
+# touch-watch prints nothing at all. that is the "touchscreen is completely
+# dead but the log is clean" state. so silence is NOT health - check here.
+#
+# healthy idle = 0/sec. the PIXA3854 touchpad runs the same i2c-hid stack and
+# sits at exactly 0 when untouched, which is the reference to compare against.
+# measured 289/sec idle on 2026-10-24 while the screen was untouched.
+touch-irq() {
+  local secs="${1:-10}" n p a b x y
+  _ti() { awk -v n="$1" '$1==n":"{s=0; for(i=2;i<=10;i++) s+=$i; print s}' /proc/interrupts; }
+  # digitizer is the intel-gpio line labelled ILIT2901:00 in /proc/interrupts
+  n=$(awk '/ILIT2901/{gsub(":","",$1); print $1}' /proc/interrupts)
+  p=$(awk '/i2c_designware.2/{gsub(":","",$1); print $1}' /proc/interrupts)
+  a=$(_ti $n); x=$(_ti $p)
+  echo "sampling ${secs}s - keep hands OFF the screen and touchpad"
+  sleep "$secs"
+  b=$(_ti $n); y=$(_ti $p)
+  # raw count is the primary number. rate via awk, NOT shell $(( )) - integer
+  # division floored anything under 1/sec to "0/sec", which hid exactly the
+  # low-trickle regime we care about after a fix-touch.
+  awk -v dn=$((b-a)) -v dp=$((y-x)) -v s="$secs" 'BEGIN{
+    printf "  digitizer (irq '"$n"') : %6d in %ss  = %7.2f/sec\n", dn, s, dn/s
+    printf "  touchpad  (irq '"$p"') : %6d in %ss  = %7.2f/sec   <- healthy ref, expect 0\n", dp, s, dp/s
+  }'
+  unset -f _ti
+}
 # keeping this around for nostalgia - doing dev work in tmux on shared ec2s 🥲
 #alias vim="vim --servername vim-$(tmux display -p '#S')"
 
