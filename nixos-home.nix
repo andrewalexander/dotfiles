@@ -127,6 +127,79 @@ in
     # }];
   };
 
+  # Framework's built-in speakers are physically small and bass-light. This is
+  # a per-user output EQ, which is why it lives here and not in
+  # configuration.nix - it's a session daemon with user presets, and NixOS has
+  # no equivalent module. PipeWire itself is deliberately left stock apart
+  # from the sample-rate drop-in; see the comment on services.pipewire there.
+  #
+  # programs.dconf, which this module's docs require, is already enabled
+  # system-wide by nixpkgs' plasma6 module - nothing to add in configuration.nix.
+  #
+  # extraPresets is what makes this reproducible rather than captured GUI
+  # state: the JSON below is generated from Nix into
+  # ~/.local/share/easyeffects/output/framework-speakers.json, and `preset`
+  # pins it as the one loaded at startup (--load-preset).
+  services.easyeffects = {
+    enable = true;
+    preset = "framework-speakers";
+
+    # Tuned by ear, not a measured correction. Started as an AutoEQ-style
+    # parametric text export imported into EasyEffects, then adjusted while
+    # listening - which is why every band is mode "APO (DR)":
+    # that is what the APO/AutoEQ text importer sets, and it is kept so the
+    # filter shapes stay identical to what was actually auditioned.
+    #
+    # Rationale per band: a 70Hz hi-pass so excursion isn't wasted on bass
+    # these drivers cannot reproduce; +10.07dB at 180Hz for body, which is low
+    # enough to add warmth but still inside the driver's usable range;
+    # -0.68dB at 1.6kHz to take out the boxy/honky shout; +11.86dB at 7kHz for
+    # air. output-gain is -6.9dB: the largest boost is +11.86dB, so this keeps
+    # the two boosts from clipping into the limiter without fully cancelling
+    # them. Turn system volume up to compensate.
+    #
+    # To retune: adjust in the EasyEffects GUI, then read the live values out
+    # of ~/.config/easyeffects/db/equalizerrc and transcribe them here.
+    #
+    # Do NOT hit save onto the framework-speakers preset. home-manager owns
+    # ~/.local/share/easyeffects/output/framework-speakers.json as a read-only
+    # nix-store symlink, so the write fails silently AND EasyEffects then
+    # reloads the preset from disk, wiping the in-app tuning you just made.
+    # (Saving under a different, unmanaged preset name does work.)
+    # Enum note: equalizerrc stores indices - Mode 6 = "APO (DR)", Mode absent
+    # = "RLC (BT)"; Slope absent = "x1", band0Slope=1 = "x2".
+    extraPresets.framework-speakers.output = {
+      blocklist = [ ];
+      plugins_order = [ "equalizer#0" ];
+      "equalizer#0" = {
+        bypass = false;
+        input-gain = 0.0;
+        output-gain = -6.9;
+        mode = "IIR";
+        num-bands = 4;
+        split-channels = false;
+        balance = 0.0;
+        pitch-left = 0.0;
+        pitch-right = 0.0;
+        left = {
+          band0 = { type = "Hi-pass"; mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 0.0;   frequency = 70.0;   q = 0.7; width = 4.0; };
+          band1 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 10.07; frequency = 180.0;  q = 0.9; width = 4.0; };
+          band2 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = -0.68; frequency = 1600.0; q = 1.2; width = 4.0; };
+          band3 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 11.86; frequency = 7000.0; q = 0.8; width = 4.0; };
+        };
+        # split-channels = false means EasyEffects drives both channels from
+        # the left bank, but it still serialises a right bank - keep identical
+        # so toggling split in the GUI doesn't lurch the sound.
+        right = {
+          band0 = { type = "Hi-pass"; mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 0.0;   frequency = 70.0;   q = 0.7; width = 4.0; };
+          band1 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 10.07; frequency = 180.0;  q = 0.9; width = 4.0; };
+          band2 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = -0.68; frequency = 1600.0; q = 1.2; width = 4.0; };
+          band3 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 11.86; frequency = 7000.0; q = 0.8; width = 4.0; };
+        };
+      };
+    };
+  };
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }
