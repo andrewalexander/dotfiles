@@ -98,7 +98,8 @@ pkgs.stdenv.mkDerivation {
       # not exist here. Point it at the wrapper so the launcher entry works.
       if [ -f $out/share/applications/irealpro.desktop ]; then
         substituteInPlace $out/share/applications/irealpro.desktop \
-          --replace "/opt/iRealPro/irealpro" "$out/bin/irealpro"
+          --replace "/opt/iRealPro/irealpro" "$out/bin/irealpro" \
+          --replace "Categories=Audio;" "Categories=AudioVideo;Audio;Music;"
       fi
     fi
   '';
