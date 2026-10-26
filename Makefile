@@ -4,6 +4,8 @@ sync-nixos:
 	sudo cp nixos-configuration.nix /etc/nixos/configuration.nix
 	sudo mkdir -p /etc/nixos/patches
 	sudo cp patches/*.patch /etc/nixos/patches/
+	sudo rm -rf /etc/nixos/pkgs
+	sudo cp -r pkgs /etc/nixos/pkgs
 
 sync-darwin:
 	sudo cp configuration.nix /etc/nix-darwin/configuration.nix

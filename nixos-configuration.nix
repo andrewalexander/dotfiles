@@ -230,6 +230,14 @@ in
                              # services.pulseaudio.enable = false above
     pkgs.pwvucontrol         # PipeWire-native mixer: shows real nodes and the
                              # negotiated sample rate, which plasma-pa hides
+
+    # iReal Pro, packaged from the vendor .deb in pkgs/irealpro. Imported with
+    # `inherit pkgs` rather than callPackage because the expression takes a
+    # whole `pkgs` argument, not individual dependencies. Installing it
+    # system-wide is what registers the .desktop entry and icon with XDG, so
+    # it appears in the Plasma launcher instead of needing the store path.
+    # NOTE: this path has to exist under /etc/nixos too - see `make sync-nixos`.
+    (import ./pkgs/irealpro { inherit pkgs; })
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
