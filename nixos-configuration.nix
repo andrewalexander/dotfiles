@@ -87,6 +87,16 @@ in
   # Enable networking
   networking.networkmanager.enable = true;
 
+  # Intel AX211 (USB 8087:0033) - the kernel already binds it via btusb and
+  # rfkill shows it unblocked, but bluez userspace is what was missing: this
+  # flag is what runs bluetoothd and registers org.bluez on the system bus.
+  # Adding pkgs.bluez to systemPackages would install bluetoothctl with no
+  # daemon behind it. This also gates the Plasma Bluetooth applet + System
+  # Settings page: nixpkgs' plasma6 module adds bluedevil only under
+  # lib.optionals config.hardware.bluetooth.enable, the same way
+  # networkmanager above is what pulls in plasma-nm.
+  hardware.bluetooth.enable = true;
+
   # Set your time zone.
   time.timeZone = "America/New_York";
 
@@ -132,20 +142,41 @@ in
     pulse.enable = true;
     # If you want to use JACK applications, uncomment this
     # jack.enable = true;
+
+    # Upstream ships allowed-rates = [ 48000 ] only, so every 44.1kHz stream
+    # (i.e. most music) is resampled through the quality-4 resampler forever.
+    # The ALC285 in this machine advertises 44100/48000/96000/192000 natively
+    # (/proc/asound/card0/codec#0), so letting the device switch rates is
+    # strictly better than converting. Two rates only, deliberately: each
+    # extra rate is another chance to glitch on a switch, and 96k/192k buy
+    # nothing on built-in speakers. default.clock.rate stays 48000 as the
+    # idle/default, which is what conferencing and system sounds want.
+    #
+    # Each attr here becomes one drop-in in /etc/pipewire/pipewire.conf.d.
+    extraConfig.pipewire."10-clock-rates" = {
+      "context.properties" = {
+        "default.clock.allowed-rates" = [ 44100 48000 ];
+      };
+    };
   };
 
   # services.libinput.enable only generates Xorg InputClass config - it's a
   # no-op under this Wayland (KDE Plasma) session, since KWin reads the
   # libinput library directly. Touchpad/touchscreen tuning for this session
-  # goes through KDE (plasma-manager, in home-manager) or libinput quirks
-  # files, not this option.
+  # goes through KDE (plasma-manager, in home-manager), or a libinput quirks
+  # file - though note /etc/libinput/local-overrides.quirks does not currently
+  # exist, so nothing is being tuned that way today.
 
-  # zsh itself is configured by home-manager (programs.zsh + the zplug
-  # module in nixos-home.nix). The only part that has to live at the system
-  # level is making it a legal login shell: /etc/shells and the passwd entry
-  # are not writable from home-manager. Deliberately not programs.zsh.enable,
-  # which would pull in system-wide zsh integration we do not want.
-  environment.shells = [ pkgs.zsh ];
+  # Required, not optional: NixOS asserts that a user whose shell is zsh must
+  # also have programs.zsh.enable, because this is what generates /etc/zshrc -
+  # without it a zsh login has no nix directories on PATH. environment.shells
+  # alone is not enough.
+  #
+  # This does not take zsh config away from home-manager. The split is:
+  # NixOS owns /etc/zshrc (system PATH and profile plumbing) and /etc/shells;
+  # home-manager owns ~/.zshrc and everything in it, including zplug (see
+  # programs.zsh in nixos-home.nix).
+  programs.zsh.enable = true;
 
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."andrew" = {
@@ -175,8 +206,8 @@ in
     pkgs.vim
     pkgs.git
     pkgs.discord
-	pkgs.go
-	pkgs.ghostty
+    pkgs.go
+    pkgs.ghostty
     pkgs.maliit-keyboard
     pkgs.dbeaver-bin
     pkgs.usbutils
@@ -184,6 +215,21 @@ in
     pkgs.home-manager
     pkgs.claude-code
     pkgs.gnumake
+    pkgs.kdePackages.plasma-thunderbolt
+    pkgs.python3
+    # input debugging for the ILIT2901 touchscreen work - libinput
+    # debug-events shows what userspace actually receives, evtest shows
+    # raw kernel events. both were being nix-shell'd ad hoc.
+    pkgs.libinput
+    pkgs.evtest
+    # Audio triage tooling. Before this, the only things on PATH were the
+    # pw-* tools and wpctl - no pactl, amixer, aplay or speaker-test - which
+    # makes anything below the PipeWire layer awkward to inspect.
+    pkgs.alsa-utils          # amixer/aplay/arecord/speaker-test vs the ALC285
+    pkgs.pulseaudio          # for pactl ONLY; the daemon stays off, see
+                             # services.pulseaudio.enable = false above
+    pkgs.pwvucontrol         # PipeWire-native mixer: shows real nodes and the
+                             # negotiated sample rate, which plasma-pa hides
   ];
 
   nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
