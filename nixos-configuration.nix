@@ -8,7 +8,19 @@
   pkgs, ...
 }:
 let
-  unstable = import <nixos-unstable> {};
+  allowedUnfree = [
+    "discord"
+    "sublimetext4"
+    "claude-code"
+  ];
+  allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) allowedUnfree;
+
+  # The unstable set is a separate nixpkgs instantiation, so `nixpkgs.config`
+  # below does not reach it - the unfree predicate has to be passed in here.
+  unstable = import <nixos-unstable> {
+    system = pkgs.stdenv.hostPlatform.system;
+    config = { inherit allowUnfreePredicate; };
+  };
 in
 {
   imports = [
@@ -96,6 +108,17 @@ in
   # lib.optionals config.hardware.bluetooth.enable, the same way
   # networkmanager above is what pulls in plasma-nm.
   hardware.bluetooth.enable = true;
+
+  # Targus DOCK220 (Thunderbolt) - same shape as the bluetooth case above:
+  # plasma-thunderbolt in systemPackages is only the System Settings page,
+  # and it talks to boltd over org.freedesktop.bolt. Without this flag there
+  # is no daemon, so the page errors out and - more to the point - a TB
+  # device arriving at security level "user" is never authorized and stays
+  # dark. Note this is necessary but not sufficient on this machine: the
+  # TB4 NHI (00:0d.2/.3) and PCIe bridges (00:07.x) are currently hidden
+  # from the PCI bus entirely, which is a BIOS-side Thunderbolt toggle.
+  # /sys/bus/thunderbolt/devices stays empty until that is flipped.
+  services.hardware.bolt.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -203,6 +226,9 @@ in
   # ];
   # environment.systemPackages = with pkgs; [
   environment.systemPackages = [
+    # keep unstable up here
+    unstable.libfprint
+    unstable.claude-code
     pkgs.vim
     pkgs.git
     pkgs.discord
@@ -211,9 +237,7 @@ in
     pkgs.maliit-keyboard
     pkgs.dbeaver-bin
     pkgs.usbutils
-    unstable.libfprint
     pkgs.home-manager
-    pkgs.claude-code
     pkgs.gnumake
     pkgs.kdePackages.plasma-thunderbolt
     pkgs.python3
@@ -240,11 +264,7 @@ in
     (import ./pkgs/irealpro { inherit pkgs; })
   ];
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "discord"
-    "sublimetext4"
-    "claude-code"
-  ];
+  nixpkgs.config.allowUnfreePredicate = allowUnfreePredicate;
 
   # services.fprintd.enable = true;
   services.fprintd = {
