@@ -89,6 +89,23 @@ in
     }
   ];
 
+  # PIXA3854 touchpad: after resuming from hibernation (seen 2026-10-27) it
+  # came back reporting clicks but no motion, pinning the cursor bottom-right.
+  # Kernel side looked healthy - bound to hid-multitouch, not runtime
+  # suspended, not inhibited, no i2c-hid errors - and a transport rebind
+  # (same mechanism as fix-touch, touchpad only) restored it. So rebind it
+  # unconditionally on every resume. Runs from post-resume.service, which
+  # covers both suspend and hibernate. Harmless when the touchpad is fine,
+  # but it also hides whether the fault still happens - drop this to re-test.
+  powerManagement.resumeCommands = ''
+    d=/sys/bus/i2c/drivers/i2c_hid_acpi
+    if [ -e "$d/i2c-PIXA3854:00" ]; then
+      echo -n i2c-PIXA3854:00 > "$d/unbind" || true
+      sleep 1
+    fi
+    echo -n i2c-PIXA3854:00 > "$d/bind" || true
+  '';
+
   networking.hostName = "ye-olde-framework12"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
