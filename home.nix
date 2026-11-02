@@ -61,6 +61,14 @@
     EDITOR="vim";
   };
 
+  programs.git = {
+    enable = true;
+    settings.user = {
+      name = "Andrew Alexander";
+      email = "andrewalex1992@gmail.com";
+    };
+  };
+
   # Let Home Manager install and manage itself.
   programs.home-manager.enable = true;
 }
