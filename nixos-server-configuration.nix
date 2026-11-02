@@ -1,9 +1,6 @@
 # ye-olde-server. Synced to /etc/nixos/configuration.nix by `make sync-server`.
 # hardware-configuration.nix stays on the host, same as the laptop, and this
 # network's addresses are in the gitignored nixos-server-private.nix.
-#
-# Still here on purpose, until Jellyfin goes public (dnscount's
-# docs/homelab.md): user = "mac".
 
 { lib, config, pkgs, ... }:
 
@@ -164,7 +161,6 @@ in
   services.mediaStack = {
     inherit (private) lans serverAddress;
   };
-  services.jellyfin.user = "mac";
   # Without the drive, stay down rather than scan an empty library.
   systemd.services.jellyfin.unitConfig.RequiresMountsFor = [ "/mnt/big-boi" ];
 
