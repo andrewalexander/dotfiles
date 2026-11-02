@@ -1,6 +1,10 @@
 # mac zsh entry point - deployed as ~/.zshrc on the mac.
 # Homebrew-specific setup plus zplug, then the shared portable config.
 
+# nix + home-manager's profile. the installer hooks /etc/zshrc, but macos
+# upgrades replace that file and take the hook with them.
+[ -s "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh" ] && \. "/nix/var/nix/profiles/default/etc/profile.d/nix-daemon.sh"
+
 # homebrew pkgs in path + completion for zsh
 eval "$(/opt/homebrew/bin/brew shellenv zsh)"
 
@@ -12,12 +16,17 @@ export NVM_DIR="$HOME/.nvm" # without this, we lose our stuff every upgrade
 # rust's path
 export PATH="/opt/homebrew/opt/rustup/bin:$PATH"
 
-# plugins - zplug is cloned into ~/.zplug here. on linux home-manager's
-# programs.zsh.zplug module handles this instead.
+# plugins - zplug itself comes from home.packages, read-only, so ZPLUG_HOME
+# is only where it clones plugins. on linux home-manager's programs.zsh.zplug
+# module handles this instead.
 export ZPLUG_HOME=~/.zplug
-source $ZPLUG_HOME/init.zsh
+source $HOME/.nix-profile/share/zplug/init.zsh
 
 zplug "zsh-users/zsh-autosuggestions"
+
+if ! zplug check; then
+  zplug install
+fi
 
 ## Grab binaries from GitHub Releases
 # and rename with the "rename-to:" tag

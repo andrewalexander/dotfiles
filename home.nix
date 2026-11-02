@@ -9,8 +9,9 @@
   home.stateVersion = "26.05"; # Please read the comment before changing.
 
   home.packages = [
-  	ghostty-bin
-	zplug
+	pkgs.eza
+	pkgs.ghostty-bin
+	pkgs.zplug
   ];
 
   # Home Manager is pretty good at managing dotfiles. The primary way to manage

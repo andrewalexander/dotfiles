@@ -7,15 +7,19 @@ SAVEHIST=10000
 export RIPGREP_CONFIG_PATH=$HOME/.ripgreprc
 export EDITOR=vim
 
-# use exa on mac when available
-if command -v exa >/dev/null; then
-    alias ls='exa'
+# eza comes from home.packages on both mac and linux. plain ls stays plain ls.
+# -F takes an optional value, so it has to be last in a flag bundle. -h would
+# mean --header here; sizes are already human-readable.
+if command -v eza >/dev/null; then
+    alias ll='eza -alF --group-directories-first'
+    alias lld='eza -alDF --group-directories-first'
+    alias lt='eza -laTF -L 2 --group-directories-first'
+    alias ltd='eza -laTDF -L 2 --group-directories-first'
+elif ls --group-directories-first / >/dev/null 2>&1; then
     alias ll='ls -alFh --group-directories-first'
-    alias lld='ls -alFhD --group-directories-first'
-    alias lt='ls -lhaFT -L 2 --group-directories-first'
-    alias ltd='ls -lhaFTD -L 2 --group-directories-first'
 else
-    alias ll='ls -alFh --group-directories-first'
+    # BSD ls has no --group-directories-first
+    alias ll='ls -alFh'
 fi
 
 alias e="$EDITOR"
