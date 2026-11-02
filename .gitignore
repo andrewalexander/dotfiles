@@ -10,3 +10,7 @@ result-*
 # irealpro: the installer is fetched by fetchurl from the pinned url+sha256.
 # never commit the 232MB proprietary .deb itself.
 *.deb
+
+# this network's addresses, and DDNS details
+nixos-server-private.nix
+freemyip

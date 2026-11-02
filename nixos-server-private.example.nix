@@ -1,0 +1,14 @@
+# Copy to nixos-server-private.nix (gitignored) and fill in. It's kept out of the
+# repo because it describes this network. The WireGuard private key isn't here:
+# it's in /var/lib/secrets/mullvad.key.
+{
+  gateway = "192.168.1.1"; # also the only address allowed to send syslog
+  # Exempt from sshd's penalties.
+  sshExempt = "192.168.1.50";
+  # From the Mullvad WireGuard config.
+  mullvad = {
+    address = [ "10.66.0.2/32" ];
+    publicKey = "<server PublicKey>";
+    endpoint = "<server IP>:51820";
+  };
+}

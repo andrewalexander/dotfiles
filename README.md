@@ -38,6 +38,9 @@ make sync-linux  # nixos-configuration.nix -> /etc/nixos/configuration.nix
                  # nixos-home.nix -> ~/.config/home-manager/home.nix
 make sync-mac    # configuration.nix -> /etc/nix-darwin/configuration.nix
                  # home.nix -> ~/.config/home-manager/home.nix
+make sync-server # nixos-server-configuration.nix -> /etc/nixos/configuration.nix
+                 # nixos-server-home.nix -> ~/.config/home-manager/home.nix
+                 # nixos-server-private.nix -> /etc/nixos (gitignored; copy the .example)
 ```
 
 Then apply with `sudo nixos-rebuild switch` / `sudo darwin-rebuild switch` and

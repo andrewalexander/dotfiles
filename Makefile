@@ -16,7 +16,17 @@ sync-home-linux:
 sync-home-mac:
 	cp home.nix ~/.config/home-manager/home.nix
 
+sync-server-nixos:
+	sudo cp nixos-server-configuration.nix /etc/nixos/configuration.nix
+	sudo cp nixos-server-private.nix /etc/nixos/nixos-server-private.nix
+
+sync-server-home:
+	mkdir -p ~/.config/home-manager
+	cp nixos-server-home.nix ~/.config/home-manager/home.nix
+
 sync-linux: sync-nixos sync-home-linux
+
+sync-server: sync-server-nixos sync-server-home
 
 sync-mac: sync-darwin sync-home-mac
 
