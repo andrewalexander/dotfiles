@@ -5,6 +5,9 @@
   gateway = "192.168.1.1"; # also the only address allowed to send syslog
   # Exempt from sshd's penalties.
   sshExempt = "192.168.1.50";
+  # This host, and the networks allowed to reach Jellyfin and the torrent UIs.
+  serverAddress = "192.168.1.10";
+  lans = [ "192.168.1.0/24" ];
   # From the Mullvad WireGuard config.
   mullvad = {
     address = [ "10.66.0.2/32" ];

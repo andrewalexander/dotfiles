@@ -2,8 +2,8 @@
 # hardware-configuration.nix stays on the host, same as the laptop, and this
 # network's addresses are in the gitignored nixos-server-private.nix.
 #
-# Still here on purpose, until Jellyfin moves behind Caddy (dnscount's
-# docs/homelab.md): its openFirewall and user = "mac".
+# Still here on purpose, until Jellyfin goes public (dnscount's
+# docs/homelab.md): user = "mac".
 
 { lib, config, pkgs, ... }:
 
@@ -16,6 +16,7 @@ in
     /home/mac/src/dnscount/nix/module.nix
     /home/mac/src/dnscount/deploy/nixos/vpn-netns.nix
     /home/mac/src/dnscount/deploy/nixos/wifi-watchdog.nix
+    /home/mac/src/dnscount/deploy/nixos/media.nix
   ];
 
   # Only Transmission and Jackett use the tunnel. They can't reach anything else
@@ -158,11 +159,12 @@ in
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
 
-  services.jellyfin = {
-    enable = true;
-    openFirewall = true;
-    user = "mac";
+  # Jellyfin behind Caddy, so dnscount sees every request. Its port and network
+  # settings are managed by media.nix.
+  services.mediaStack = {
+    inherit (private) lans serverAddress;
   };
+  services.jellyfin.user = "mac";
   # Without the drive, stay down rather than scan an empty library.
   systemd.services.jellyfin.unitConfig.RequiresMountsFor = [ "/mnt/big-boi" ];
 
