@@ -22,6 +22,7 @@ in
   services.vpnNamespace = {
     inherit (private.mullvad) address publicKey endpoint;
     downloadDir = "/mnt/big-boi/Downloads";
+    transmissionCredentialsFile = "/var/lib/secrets/transmission.json";
   };
 
   # No Ethernet on this laptop, and the wl driver can stop receiving while still
@@ -88,6 +89,19 @@ in
     fsType = "xfs";
     options = [ "nofail" "x-systemd.device-timeout=30s" ];
   };
+
+  # Weekly updates from the 26.05 channel. Never reboots by itself, so a new
+  # kernel waits for a manual reboot. Failures are in journalctl -u nixos-upgrade.
+  system.autoUpgrade = {
+    enable = true;
+    dates = "Sun 04:00";
+    randomizedDelaySec = "45min";
+    allowReboot = false;
+  };
+  # hardware-configuration.nix allows broadcom-sta by an exact name that includes
+  # the kernel version, so any kernel update would break the upgrade. wl is
+  # insecure, but this laptop has no other way onto the network.
+  nixpkgs.config.allowInsecurePredicate = pkg: lib.getName pkg == "broadcom-sta";
 
   # Set your time zone.
   time.timeZone = "America/New_York";
