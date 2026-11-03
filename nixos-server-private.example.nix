@@ -7,6 +7,7 @@
   sshExempt = "192.168.1.50";
   # This host, and the networks allowed to reach Jellyfin and the torrent UIs.
   serverAddress = "192.168.1.10";
+  domain = "jellyfin.example.com"; # or null to stay LAN-only
   lans = [ "192.168.1.0/24" ];
   # From the Mullvad WireGuard config.
   mullvad = {

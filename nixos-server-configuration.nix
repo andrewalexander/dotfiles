@@ -173,7 +173,7 @@ in
   # Jellyfin behind Caddy, so dnscount sees every request. Its port and network
   # settings are managed by media.nix.
   services.mediaStack = {
-    inherit (private) lans serverAddress;
+    inherit (private) lans serverAddress domain;
   };
   # Without the drive, stay down rather than scan an empty library.
   systemd.services.jellyfin.unitConfig.RequiresMountsFor = [ "/mnt/big-boi" ];
