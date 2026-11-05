@@ -63,3 +63,9 @@ plugins:
 	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ~/.oh-my-zsh/plugins/zsh-syntax-highlighting
 
 
+
+# The runbook for this network, rendered from ye-olde-jellyfin's generic one
+# and diffed against homelab.private.md. Empty diff: they agree.
+JELLYFIN ?= $(HOME)/src/ye-olde-jellyfin
+homelab:
+	sed -f homelab.values $(JELLYFIN)/docs/runbook.md | diff -u homelab.private.md - || true

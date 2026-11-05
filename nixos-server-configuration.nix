@@ -6,14 +6,28 @@
 
 let
   private = import ./nixos-server-private.nix;
+
+  # The monitoring tool and the Jellyfin stack, pinned. To work against local
+  # checkouts instead, set monitoringSrc/jellyfinSrc in nixos-server-private.nix.
+  # Bump: change rev, then sha256 from `nix-prefetch-url --unpack <url>`.
+  github = repo: rev: sha256: builtins.fetchTarball {
+    url = "https://github.com/andrewalexander/${repo}/archive/${rev}.tar.gz";
+    inherit sha256;
+  };
+  monitoringSrc = private.monitoringSrc or (github "ye-olde-monitoring"
+    "REV-AFTER-PUBLISH"
+    "SHA256-AFTER-PUBLISH");
+  jellyfinSrc = private.jellyfinSrc or (github "ye-olde-jellyfin"
+    "REV-AFTER-PUBLISH"
+    "SHA256-AFTER-PUBLISH");
 in
 {
   imports = [
     ./hardware-configuration.nix
-    /home/mac/src/dnscount/nix/module.nix
-    /home/mac/src/dnscount/deploy/nixos/vpn-netns.nix
-    /home/mac/src/dnscount/deploy/nixos/wifi-watchdog.nix
-    /home/mac/src/dnscount/deploy/nixos/media.nix
+    "${monitoringSrc}/nix/module.nix"
+    "${jellyfinSrc}/nix/vpn-netns.nix"
+    "${jellyfinSrc}/nix/wifi-watchdog.nix"
+    "${jellyfinSrc}/nix/media.nix"
   ];
 
   # Only Transmission and Jackett use the tunnel. They can't reach anything else
@@ -28,7 +42,7 @@ in
   # No Ethernet on this laptop, and the wl driver can stop receiving while still
   # reporting "connected". The router's syslog never stops for long, so a quiet
   # raw directory means inbound traffic has died. See
-  # deploy/nixos/wifi-watchdog.nix.
+  # ye-olde-jellyfin's nix/wifi-watchdog.nix.
   services.wifiWatchdog = {
     enable = true;
     interface = "wlp2s0";
@@ -38,12 +52,14 @@ in
   };
   networking.networkmanager.wifi.powersave = false;
 
-  # Hit counter and request/DNS logger; see ~/src/dnscount/docs/homelab.md.
+  # ye-olde-monitoring: requests, DNS lookups, alerts and bans. The steps for
+  # this host are in homelab.private.md (gitignored); the generic version is
+  # ye-olde-jellyfin's docs/runbook.md.
   # Listens on all addresses so a DHCP change can't stop it binding: the
   # firewall rule and the allow list both limit senders to the router.
   services.dnscount = {
     enable = true;
-    package = pkgs.callPackage /home/mac/src/dnscount/nix/package.nix { };
+    package = pkgs.callPackage "${monitoringSrc}/nix/package.nix" { };
     environmentFile = "/var/lib/secrets/dnscount.env";
     syslog = {
       enable = true;

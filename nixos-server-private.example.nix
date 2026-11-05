@@ -15,4 +15,7 @@
     publicKey = "<server PublicKey>";
     endpoint = "<server IP>:51820";
   };
+  # Optional: build from local checkouts instead of the pinned GitHub releases.
+  # monitoringSrc = /home/mac/src/ye-olde-monitoring;
+  # jellyfinSrc = /home/mac/src/ye-olde-jellyfin;
 }

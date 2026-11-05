@@ -14,3 +14,7 @@ result-*
 # this network's addresses, and DDNS details
 nixos-server-private.nix
 freemyip
+
+# the runbook specific to this network, and the values that render it from the generic one
+homelab.private.md
+homelab.values

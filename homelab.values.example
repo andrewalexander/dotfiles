@@ -1,0 +1,16 @@
+# Copy to homelab.values (gitignored) with your own values. `make homelab`
+# fills ye-olde-jellyfin's generic runbook with them and diffs the result
+# against homelab.private.md, the runbook specific to this network.
+# One sed rule per placeholder; | is the delimiter, so values can contain /.
+s|<controller>|laptop|g
+s|<server>|media-box|g
+s|<router>|router|g
+s|<ssh-key>|homelab|g
+s|<key-comment>|you@laptop|g
+s|<github-user>|alice|g
+s|<you>|alice|g
+s|<B-IP>|192.168.1.10|g
+s|<router-ip>|192.168.1.1|g
+s|<lan>|192.168.1.0/24|g
+s|<media-dir>|/srv/media|g
+s|<domain>|example.com|g
