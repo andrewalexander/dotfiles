@@ -213,6 +213,7 @@ in
   environment.systemPackages = [
     pkgs.vim
     pkgs.git
+    pkgs.ripgrep
     pkgs.gnumake
     pkgs.home-manager
     pkgs.jellyfin
