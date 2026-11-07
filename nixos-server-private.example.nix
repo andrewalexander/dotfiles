@@ -5,6 +5,8 @@
   gateway = "192.168.1.1"; # also the only address allowed to send syslog
   # Exempt from sshd's penalties.
   sshExempt = "192.168.1.50";
+  # Public keys allowed to ssh in as mac.
+  authorizedKeys = [ "ssh-ed25519 AAAA... you@controller" ];
   # This host, and the networks allowed to reach Jellyfin and the torrent UIs.
   serverAddress = "192.168.1.10";
   domain = "jellyfin.example.com"; # or null to stay LAN-only
