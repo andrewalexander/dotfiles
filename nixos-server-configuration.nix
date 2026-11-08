@@ -22,9 +22,13 @@ let
       inherit sha256;
     };
   monitoringSrc =
-    private.monitoringSrc or (github "ye-olde-monitoring" "REV-AFTER-PUBLISH" "SHA256-AFTER-PUBLISH");
+    private.monitoringSrc or (github "ye-olde-monitoring" "5f062bc428a1c48448b902c40e41f6f957530e0d"
+      "1k9k9pb3v4ab88k1q2flf51n8i48isg9f83xf3s57cdxsbiz1g0q"
+    );
   jellyfinSrc =
-    private.jellyfinSrc or (github "ye-olde-jellyfin" "REV-AFTER-PUBLISH" "SHA256-AFTER-PUBLISH");
+    private.jellyfinSrc or (github "ye-olde-jellyfin" "ebaf92f60e28ff72fdcac8d5ea07a47aee611078"
+      "1a2ny388xzbj99p6j8qws1am9jnblhzfnp4br5mnzpvs4w69rjik"
+    );
 in
 {
   imports = [
