@@ -171,6 +171,23 @@ in
     };
   };
 
+  # Remote access from my own devices, for ssh and the LAN-only sites (the
+  # tailnet is in `lans`). Nothing new is forwarded on the router: Tailscale
+  # connects out, directly or through DERP relays. Tagged, so its key never
+  # expires; the auth key is only needed for the first login and can be
+  # deleted after: /var/lib/secrets/tailscale.key. tailscale0 isn't trusted, so
+  # the firewall opens only 22 and the `lans` ports to it, and the tailnet
+  # policy narrows that to my devices.
+  services.tailscale = {
+    enable = true;
+    authKeyFile = "/var/lib/secrets/tailscale.key";
+    openFirewall = true; # UDP 41641, for direct (non-relayed) connections
+    extraUpFlags = [
+      "--advertise-tags=tag:server"
+      "--accept-dns=false" # keep this host's resolver; MagicDNS is for clients
+    ];
+  };
+
   environment.systemPackages = [
     pkgs.vim
     pkgs.git
