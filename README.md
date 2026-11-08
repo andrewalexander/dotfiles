@@ -30,9 +30,12 @@ home-manager switch
 Edit the repo copy, then `make sync`. It picks the machine by hostname and
 copies its files where they take effect: `home.nix` (every machine, plus
 `plasma.nix` on the framework) to `~/.config/home-manager`, and on NixOS its
-`nixos-*.nix` to `/etc/nixos`. `nixos-server-private.nix` is gitignored; copy
-the `.example`. Then `sudo nixos-rebuild switch` (NixOS) and
+`nixos-*.nix` to `/etc/nixos`. Then `sudo nixos-rebuild switch` (NixOS) and
 `home-manager switch`.
+
+`nixos-server-private.nix` (this network's addresses) is gitignored and lives
+only on ye-olde-server, in `~/dotfiles`. Edit it there; a copy anywhere else is
+read by nothing. On a fresh install, start from the `.example`.
 
 ## Trackpad scroll direction
 For some reason the magic trackpad didn't respect the settings in the UI. Adding this to `/etc/X11/xorg.conf.d/30-touchpad.conf` made it work and persist
