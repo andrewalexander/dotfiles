@@ -2,7 +2,12 @@
 # with zplug on Linux. Imported by home.nix (Macs), nixos-home.nix (the
 # framework) and nixos-server-home.nix; the sync-*-home targets copy it next
 # to them in ~/.config/home-manager.
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   dot = "${config.home.homeDirectory}/dotfiles/config";
 in
@@ -15,6 +20,7 @@ lib.mkMerge [
     home.packages = lib.mkAfter [
       pkgs.eza
       pkgs.zplug
+      pkgs.nixfmt # vim formats .nix files with it on save
     ];
 
     home.file = {

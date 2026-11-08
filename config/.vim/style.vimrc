@@ -10,6 +10,7 @@ autocmd FileType javascript setlocal shiftwidth=2 tabstop=2
 autocmd FileType css setlocal shiftwidth=2 tabstop=2
 autocmd FileType json setlocal shiftwidth=2 tabstop=2 expandtab
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+autocmd FileType nix setlocal ts=2 sts=2 sw=2 expandtab
 autocmd FileType go setlocal ts=4 sts=4 sw=4 noexpandtab
 autocmd FileType c setlocal ts=4 sts=4 sw=4 expandtab
 autocmd FileType typescript setlocal shiftwidth=2 tabstop=2 expandtab

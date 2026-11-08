@@ -2,7 +2,12 @@
 # hardware-configuration.nix stays on the host, same as the laptop, and this
 # network's addresses are in the gitignored nixos-server-private.nix.
 
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 
 let
   private = import ./nixos-server-private.nix;
@@ -10,16 +15,16 @@ let
   # The monitoring tool and the Jellyfin stack, pinned. To work against local
   # checkouts instead, set monitoringSrc/jellyfinSrc in nixos-server-private.nix.
   # Bump: change rev, then sha256 from `nix-prefetch-url --unpack <url>`.
-  github = repo: rev: sha256: builtins.fetchTarball {
-    url = "https://github.com/andrewalexander/${repo}/archive/${rev}.tar.gz";
-    inherit sha256;
-  };
-  monitoringSrc = private.monitoringSrc or (github "ye-olde-monitoring"
-    "REV-AFTER-PUBLISH"
-    "SHA256-AFTER-PUBLISH");
-  jellyfinSrc = private.jellyfinSrc or (github "ye-olde-jellyfin"
-    "REV-AFTER-PUBLISH"
-    "SHA256-AFTER-PUBLISH");
+  github =
+    repo: rev: sha256:
+    builtins.fetchTarball {
+      url = "https://github.com/andrewalexander/${repo}/archive/${rev}.tar.gz";
+      inherit sha256;
+    };
+  monitoringSrc =
+    private.monitoringSrc or (github "ye-olde-monitoring" "REV-AFTER-PUBLISH" "SHA256-AFTER-PUBLISH");
+  jellyfinSrc =
+    private.jellyfinSrc or (github "ye-olde-jellyfin" "REV-AFTER-PUBLISH" "SHA256-AFTER-PUBLISH");
 in
 {
   imports = [
@@ -92,12 +97,18 @@ in
   fileSystems."/mnt/big-boi" = {
     device = "/dev/disk/by-uuid/56445c81-510e-4d4f-99db-257989f3fc1d";
     fsType = "btrfs";
-    options = [ "nofail" "x-systemd.device-timeout=30s" ];
+    options = [
+      "nofail"
+      "x-systemd.device-timeout=30s"
+    ];
   };
   fileSystems."/mnt/Media" = {
     device = "/dev/disk/by-uuid/68f95af7-f7c6-4ec8-867b-1f712524b36e";
     fsType = "xfs";
-    options = [ "nofail" "x-systemd.device-timeout=30s" ];
+    options = [
+      "nofail"
+      "x-systemd.device-timeout=30s"
+    ];
   };
 
   # Weekly updates from the 26.05 channel. Never reboots by itself, so a new
@@ -118,7 +129,11 @@ in
     isNormalUser = true;
     description = "mac";
     shell = pkgs.zsh;
-    extraGroups = [ "networkmanager" "wheel" "media" ];
+    extraGroups = [
+      "networkmanager"
+      "wheel"
+      "media"
+    ];
     packages = with pkgs; [
       kdePackages.kate
     ];

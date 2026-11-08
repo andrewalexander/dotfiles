@@ -46,6 +46,9 @@
   # Enable CUPS to print documents.
   services.printing.enable = true;
 
+  # Enable thunderbolt docks
+  services.hardware.bolt.enable = true;
+
   # Enable sound with pipewire. Per-machine tuning (the framework's clock
   # rates) is added in that machine's config.
   services.pulseaudio.enable = false;

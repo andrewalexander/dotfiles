@@ -2,8 +2,7 @@
 let
   # plasma-manager lets us manage KDE settings declaratively. Fetched
   # unpinned; add a `ref`/`rev` here if we ever need reproducibility.
-  plasma-manager = builtins.fetchTarball
-    "https://github.com/nix-community/plasma-manager/archive/trunk.tar.gz";
+  plasma-manager = builtins.fetchTarball "https://github.com/nix-community/plasma-manager/archive/trunk.tar.gz";
 in
 {
   imports = [
@@ -33,8 +32,7 @@ in
     # NOTE: KWin only reads InputMethod at startup - changing it requires a
     # logout/login, not just a reconfigure.
     configFile.kwinrc.Wayland = {
-      InputMethod =
-        "/run/current-system/sw/share/applications/com.github.maliit.keyboard.desktop";
+      InputMethod = "/run/current-system/sw/share/applications/com.github.maliit.keyboard.desktop";
       VirtualKeyboardEnabled = false;
     };
 
@@ -105,19 +103,99 @@ in
         pitch-left = 0.0;
         pitch-right = 0.0;
         left = {
-          band0 = { type = "Hi-pass"; mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 0.0;   frequency = 70.0;   q = 0.7; width = 4.0; };
-          band1 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 10.07; frequency = 180.0;  q = 0.9; width = 4.0; };
-          band2 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = -0.68; frequency = 1600.0; q = 1.2; width = 4.0; };
-          band3 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 11.86; frequency = 7000.0; q = 0.8; width = 4.0; };
+          band0 = {
+            type = "Hi-pass";
+            mode = "APO (DR)";
+            slope = "x1";
+            solo = false;
+            mute = false;
+            gain = 0.0;
+            frequency = 70.0;
+            q = 0.7;
+            width = 4.0;
+          };
+          band1 = {
+            type = "Bell";
+            mode = "APO (DR)";
+            slope = "x1";
+            solo = false;
+            mute = false;
+            gain = 10.07;
+            frequency = 180.0;
+            q = 0.9;
+            width = 4.0;
+          };
+          band2 = {
+            type = "Bell";
+            mode = "APO (DR)";
+            slope = "x1";
+            solo = false;
+            mute = false;
+            gain = -0.68;
+            frequency = 1600.0;
+            q = 1.2;
+            width = 4.0;
+          };
+          band3 = {
+            type = "Bell";
+            mode = "APO (DR)";
+            slope = "x1";
+            solo = false;
+            mute = false;
+            gain = 11.86;
+            frequency = 7000.0;
+            q = 0.8;
+            width = 4.0;
+          };
         };
         # split-channels = false means EasyEffects drives both channels from
         # the left bank, but it still serialises a right bank - keep identical
         # so toggling split in the GUI doesn't lurch the sound.
         right = {
-          band0 = { type = "Hi-pass"; mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 0.0;   frequency = 70.0;   q = 0.7; width = 4.0; };
-          band1 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 10.07; frequency = 180.0;  q = 0.9; width = 4.0; };
-          band2 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = -0.68; frequency = 1600.0; q = 1.2; width = 4.0; };
-          band3 = { type = "Bell";    mode = "APO (DR)"; slope = "x1"; solo = false; mute = false; gain = 11.86; frequency = 7000.0; q = 0.8; width = 4.0; };
+          band0 = {
+            type = "Hi-pass";
+            mode = "APO (DR)";
+            slope = "x1";
+            solo = false;
+            mute = false;
+            gain = 0.0;
+            frequency = 70.0;
+            q = 0.7;
+            width = 4.0;
+          };
+          band1 = {
+            type = "Bell";
+            mode = "APO (DR)";
+            slope = "x1";
+            solo = false;
+            mute = false;
+            gain = 10.07;
+            frequency = 180.0;
+            q = 0.9;
+            width = 4.0;
+          };
+          band2 = {
+            type = "Bell";
+            mode = "APO (DR)";
+            slope = "x1";
+            solo = false;
+            mute = false;
+            gain = -0.68;
+            frequency = 1600.0;
+            q = 1.2;
+            width = 4.0;
+          };
+          band3 = {
+            type = "Bell";
+            mode = "APO (DR)";
+            slope = "x1";
+            solo = false;
+            mute = false;
+            gain = 11.86;
+            frequency = 7000.0;
+            q = 0.8;
+            width = 4.0;
+          };
         };
       };
     };

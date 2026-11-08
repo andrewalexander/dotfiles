@@ -112,6 +112,16 @@ let g:go_gorename_command = "gopls"
 " ==================== rust.vim ====================
 let g:rustfmt_autosave = 1
 
+" ==================== neoformat ====================
+" Nix files are formatted on save with nixfmt (installed by home-common.nix).
+" undojoin folds the reformat into the last change, so one u undoes both.
+let g:neoformat_enabled_nix = ['nixfmt']
+let g:neoformat_only_msg_on_error = 1
+augroup neoformat_nix
+  autocmd!
+  autocmd BufWritePre *.nix try | undojoin | catch /E790/ | endtry | Neoformat
+augroup END
+
 " ==================== delimitMate ====================
 let g:delimitMate_expand_cr = 1
 let g:delimitMate_expand_space = 1
