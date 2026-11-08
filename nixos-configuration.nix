@@ -8,7 +8,19 @@
   pkgs, ...
 }:
 let
-  unstable = import <nixos-unstable> {};
+  allowedUnfree = [
+    "discord"
+    "sublimetext4"
+    "claude-code"
+  ];
+  allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) allowedUnfree;
+
+  # The unstable set is a separate nixpkgs instantiation, so `nixpkgs.config`
+  # below does not reach it - the unfree predicate has to be passed in here.
+  unstable = import <nixos-unstable> {
+    system = pkgs.stdenv.hostPlatform.system;
+    config = { inherit allowUnfreePredicate; };
+  };
 in
 {
   imports = [
@@ -77,6 +89,23 @@ in
     }
   ];
 
+  # PIXA3854 touchpad: after resuming from hibernation (seen 2026-10-27) it
+  # came back reporting clicks but no motion, pinning the cursor bottom-right.
+  # Kernel side looked healthy - bound to hid-multitouch, not runtime
+  # suspended, not inhibited, no i2c-hid errors - and a transport rebind
+  # (same mechanism as fix-touch, touchpad only) restored it. So rebind it
+  # unconditionally on every resume. Runs from post-resume.service, which
+  # covers both suspend and hibernate. Harmless when the touchpad is fine,
+  # but it also hides whether the fault still happens - drop this to re-test.
+  powerManagement.resumeCommands = ''
+    d=/sys/bus/i2c/drivers/i2c_hid_acpi
+    if [ -e "$d/i2c-PIXA3854:00" ]; then
+      echo -n i2c-PIXA3854:00 > "$d/unbind" || true
+      sleep 1
+    fi
+    echo -n i2c-PIXA3854:00 > "$d/bind" || true
+  '';
+
   networking.hostName = "ye-olde-framework12"; # Define your hostname.
   # networking.wireless.enable = true;  # Enables wireless support via wpa_supplicant.
 
@@ -96,6 +125,17 @@ in
   # lib.optionals config.hardware.bluetooth.enable, the same way
   # networkmanager above is what pulls in plasma-nm.
   hardware.bluetooth.enable = true;
+
+  # Targus DOCK220 (Thunderbolt) - same shape as the bluetooth case above:
+  # plasma-thunderbolt in systemPackages is only the System Settings page,
+  # and it talks to boltd over org.freedesktop.bolt. Without this flag there
+  # is no daemon, so the page errors out and - more to the point - a TB
+  # device arriving at security level "user" is never authorized and stays
+  # dark. Note this is necessary but not sufficient on this machine: the
+  # TB4 NHI (00:0d.2/.3) and PCIe bridges (00:07.x) are currently hidden
+  # from the PCI bus entirely, which is a BIOS-side Thunderbolt toggle.
+  # /sys/bus/thunderbolt/devices stays empty until that is flipped.
+  services.hardware.bolt.enable = true;
 
   # Set your time zone.
   time.timeZone = "America/New_York";
@@ -203,6 +243,9 @@ in
   # ];
   # environment.systemPackages = with pkgs; [
   environment.systemPackages = [
+    # keep unstable up here
+    unstable.libfprint
+    unstable.claude-code
     pkgs.vim
     pkgs.git
     pkgs.discord
@@ -211,9 +254,7 @@ in
     pkgs.maliit-keyboard
     pkgs.dbeaver-bin
     pkgs.usbutils
-    unstable.libfprint
     pkgs.home-manager
-    pkgs.claude-code
     pkgs.gnumake
     pkgs.kdePackages.plasma-thunderbolt
     pkgs.python3
@@ -240,11 +281,7 @@ in
     (import ./pkgs/irealpro { inherit pkgs; })
   ];
 
-  nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (lib.getName pkg) [
-    "discord"
-    "sublimetext4"
-    "claude-code"
-  ];
+  nixpkgs.config.allowUnfreePredicate = allowUnfreePredicate;
 
   # services.fprintd.enable = true;
   services.fprintd = {
