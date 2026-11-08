@@ -8,8 +8,7 @@
   # rtfm...
   home.stateVersion = "26.05"; # Please read the comment before changing.
 
-  home.packages = [
-  	ghostty-bin
+  home.packages = with pkgs; [
 	zplug
   ];
 
