@@ -20,31 +20,19 @@ otherwise (https://ghostty.org/docs/install/binary#macos)
 
 ## Installation
 ```
-# make init # for linux
-make init-mac # for mac
-# make install
-# make plugins
+make init-mac   # once, on a fresh Mac
+make sync
 home-manager switch
 ```
 
 ## Keeping system configs in sync
 
-`nixos-configuration.nix`, `configuration.nix`, `nixos-home.nix`, and
-`home.nix` are tracked here but need to land at OS-specific locations to
-actually take effect. Edit the repo copy, then sync it out with one command:
-
-```
-make sync-linux  # nixos-configuration.nix -> /etc/nixos/configuration.nix
-                 # nixos-home.nix -> ~/.config/home-manager/home.nix
-make sync-mac    # configuration.nix -> /etc/nix-darwin/configuration.nix
-                 # home.nix -> ~/.config/home-manager/home.nix
-make sync-server # nixos-server-configuration.nix -> /etc/nixos/configuration.nix
-                 # nixos-server-home.nix -> ~/.config/home-manager/home.nix
-                 # nixos-server-private.nix -> /etc/nixos (gitignored; copy the .example)
-```
-
-Then apply with `sudo nixos-rebuild switch` / `sudo darwin-rebuild switch` and
-`home-manager switch` as appropriate.
+Edit the repo copy, then `make sync`. It picks the machine by hostname and
+copies its files where they take effect: `home.nix` (every machine, plus
+`plasma.nix` on the framework) to `~/.config/home-manager`, and on NixOS its
+`nixos-*.nix` to `/etc/nixos`. `nixos-server-private.nix` is gitignored; copy
+the `.example`. Then `sudo nixos-rebuild switch` (NixOS) and
+`home-manager switch`.
 
 ## Trackpad scroll direction
 For some reason the magic trackpad didn't respect the settings in the UI. Adding this to `/etc/X11/xorg.conf.d/30-touchpad.conf` made it work and persist
@@ -62,7 +50,7 @@ EndSection
 ## Notes
 Uses the arch gvim package even for vim so that it gets compiled with `+clipboard` and can use the system clipboard which alacritty is also configured to share.
 
-Uses stow to create symlinks of everything in `config/` to `~/`
+home-manager links the files in `config/` into `~/` (see `home.nix`).
 
 ## Further customization for mac
 System Settings we can't necessarily automate (or can we? 🤔). We usually won't have to do this unless it's a brand new mac or a truly fresh install. 

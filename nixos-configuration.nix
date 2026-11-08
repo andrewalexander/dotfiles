@@ -29,7 +29,7 @@ in
 
   boot.kernelPackages = pkgs.linuxPackages_7_3;
 
-  # The patch file must be synced to /etc/nixos too - see `make sync-nixos`.
+  # The patch file must be synced to /etc/nixos too - see `make sync`.
   boot.kernelPatches = [
     {
       name = "i2c-hid-ili2901-unreliable-input-size";
@@ -131,7 +131,7 @@ in
     # whole `pkgs` argument, not individual dependencies. Installing it
     # system-wide is what registers the .desktop entry and icon with XDG, so
     # it appears in the Plasma launcher instead of needing the store path.
-    # NOTE: this path has to exist under /etc/nixos too - see `make sync-nixos`.
+    # NOTE: this path has to exist under /etc/nixos too - see `make sync`.
     (import ./pkgs/irealpro { inherit pkgs; })
   ];
 

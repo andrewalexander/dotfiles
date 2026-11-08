@@ -11,10 +11,6 @@ result-*
 # never commit the 232MB proprietary .deb itself.
 *.deb
 
-# this network's addresses, and DDNS details
+# this network's addresses, and its runbook (DDNS details included)
 nixos-server-private.nix
-freemyip
-
-# the runbook specific to this network, and the values that render it from the generic one
 homelab.private.md
-homelab.values

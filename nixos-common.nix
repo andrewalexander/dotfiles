@@ -1,7 +1,7 @@
 # What the NixOS machines (the framework and ye-olde-server) both set: boot,
 # locale, the Plasma desktop, sound and zsh. Imported by nixos-configuration.nix
-# and nixos-server-configuration.nix; `make sync-nixos` and `make
-# sync-server-nixos` copy it next to them in /etc/nixos.
+# and nixos-server-configuration.nix; `make sync` copies it
+# next to them in /etc/nixos.
 { ... }:
 {
   # Use the systemd-boot EFI boot loader.
@@ -68,7 +68,7 @@
   # This does not take zsh config away from home-manager. The split is:
   # NixOS owns /etc/zshrc (system PATH and profile plumbing) and /etc/shells;
   # home-manager owns ~/.zshrc and everything in it, including zplug (see
-  # programs.zsh in home-common.nix).
+  # programs.zsh in home.nix).
   programs.zsh.enable = true;
 
   # Install firefox.

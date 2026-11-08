@@ -6,15 +6,11 @@ let
 in
 {
   imports = [
-    ./home-common.nix
     "${plasma-manager}/modules"
   ];
 
-  # The framework (standalone channels). Synced to
-  # ~/.config/home-manager/home.nix by `make sync-home-linux`, with
-  # home-common.nix (the shell and editor setup every home shares) next to it.
-  home.username = "andrew";
-  home.homeDirectory = "/home/andrew";
+  # The framework's KDE settings. `make sync` copies this next to home.nix,
+  # which imports it when it's there.
 
   # KDE Plasma settings, managed declaratively.
   programs.plasma = {

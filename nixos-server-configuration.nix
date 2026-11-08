@@ -1,4 +1,4 @@
-# ye-olde-server. Synced to /etc/nixos/configuration.nix by `make sync-server`.
+# ye-olde-server. Synced to /etc/nixos/configuration.nix by `make sync`.
 # hardware-configuration.nix stays on the host, same as the laptop, and this
 # network's addresses are in the gitignored nixos-server-private.nix.
 

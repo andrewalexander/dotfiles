@@ -113,7 +113,7 @@ let g:go_gorename_command = "gopls"
 let g:rustfmt_autosave = 1
 
 " ==================== neoformat ====================
-" Nix files are formatted on save with nixfmt (installed by home-common.nix).
+" Nix files are formatted on save with nixfmt (installed by home.nix).
 " undojoin folds the reformat into the last change, so one u undoes both.
 let g:neoformat_enabled_nix = ['nixfmt']
 let g:neoformat_only_msg_on_error = 1
