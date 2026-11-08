@@ -12,9 +12,11 @@ sync-darwin:
 
 sync-home-linux:
 	cp nixos-home.nix ~/.config/home-manager/home.nix
+	cp home-common.nix ~/.config/home-manager/home-common.nix
 
 sync-home-mac:
 	cp home.nix ~/.config/home-manager/home.nix
+	cp home-common.nix ~/.config/home-manager/home-common.nix
 
 sync-server-nixos:
 	sudo cp nixos-server-configuration.nix /etc/nixos/configuration.nix
@@ -23,6 +25,7 @@ sync-server-nixos:
 sync-server-home:
 	mkdir -p ~/.config/home-manager
 	cp nixos-server-home.nix ~/.config/home-manager/home.nix
+	cp home-common.nix ~/.config/home-manager/home-common.nix
 
 sync-linux: sync-nixos sync-home-linux
 

@@ -1,64 +1,16 @@
-{ config, pkgs, ... }:
+# The Macs' home-manager config (standalone channels; `make init-mac`).
+# Synced to ~/.config/home-manager/home.nix by `make sync-home-mac`, with
+# home-common.nix (the shell and editor setup every home shares) next to it.
+{ config, ... }:
 {
-  # macos: set up for standalone channels at the moment
-  # make init-mac
+  imports = [ ./home-common.nix ];
+
   home.username = "andrew";
   home.homeDirectory = "/Users/andrew";
 
-  # rtfm...
-  home.stateVersion = "26.05"; # Please read the comment before changing.
-
-  home.packages = [
-	pkgs.eza
-	pkgs.zplug
-  ];
-
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-	".vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vimrc";
-	".vim/autoload/plug.vim".source = "${config.home.homeDirectory}/dotfiles/config/.vim/autoload/plug.vim";
-	".vim/general.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/general.vimrc";
-	".vim/mappings.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/mappings.vimrc";
-	".vim/style.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/style.vimrc";
-	".vim/plugins.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/plugins.vimrc";
-
-	# .zshrc.mac is the entry point here (homebrew/nvm/rustup + zplug from
-	# ~/.zplug); it sources .zshrc.shared at the end.
-	".zshrc".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc.mac";
-	".zshrc.shared".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc";
-	".shellrc".source = "${config.home.homeDirectory}/dotfiles/config/.shellrc";
-	".ripgreprc".source = "${config.home.homeDirectory}/dotfiles/config/.ripgreprc";
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
-  };
-
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. These will be explicitly sourced when using a
-  # shell provided by Home Manager. If you don't want to manage your shell
-  # through Home Manager then you have to manually source 'hm-session-vars.sh'
-  # located at either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/andrew/etc/profile.d/hm-session-vars.sh
-  #
-  home.sessionVariables = {
-    EDITOR="vim";
-  };
+  # .zshrc.mac is the entry point here (homebrew/nvm/rustup + zplug from
+  # ~/.zplug); it sources .zshrc.shared at the end.
+  home.file.".zshrc".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc.mac";
 
   programs.git = {
     enable = true;
@@ -67,7 +19,4 @@
       email = "andrewalex1992@gmail.com";
     };
   };
-
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
 }

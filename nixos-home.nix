@@ -1,99 +1,21 @@
 { config, pkgs, ... }:
 let
   # plasma-manager lets us manage KDE settings declaratively. Fetched
-  # unpinned to match how configuration.nix pulls nixvim; add a `ref`/`rev`
-  # here if we ever need reproducibility.
+  # unpinned; add a `ref`/`rev` here if we ever need reproducibility.
   plasma-manager = builtins.fetchTarball
     "https://github.com/nix-community/plasma-manager/archive/trunk.tar.gz";
 in
 {
   imports = [
+    ./home-common.nix
     "${plasma-manager}/modules"
   ];
 
-  # linux (NixOS): set up for standalone channels at the moment
-  # make init
+  # The framework (standalone channels). Synced to
+  # ~/.config/home-manager/home.nix by `make sync-home-linux`, with
+  # home-common.nix (the shell and editor setup every home shares) next to it.
   home.username = "andrew";
   home.homeDirectory = "/home/andrew";
-
-  # rtfm...
-  home.stateVersion = "26.05"; # Please read the comment before changing.
-
-  home.packages = [
-	pkgs.eza
-	pkgs.zplug
-  ];
-
-  # Home Manager is pretty good at managing dotfiles. The primary way to manage
-  # plain files is through 'home.file'.
-  home.file = {
-    # # Building this configuration will create a copy of 'dotfiles/screenrc' in
-    # # the Nix store. Activating the configuration will then make '~/.screenrc' a
-    # # symlink to the Nix store copy.
-    # ".screenrc".source = dotfiles/screenrc;
-	".vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vimrc";
-	".vim/autoload/plug.vim".source = "${config.home.homeDirectory}/dotfiles/config/.vim/autoload/plug.vim";
-	".vim/general.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/general.vimrc";
-	".vim/mappings.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/mappings.vimrc";
-	".vim/style.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/style.vimrc";
-	".vim/plugins.vimrc".source = "${config.home.homeDirectory}/dotfiles/config/.vim/plugins.vimrc";
-
-	# no ".zshrc" here - programs.zsh below generates it, and the two
-	# would collide. it sources these two instead.
-	".zshrc.shared".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc";
-	".zshrc.linux".source = "${config.home.homeDirectory}/dotfiles/config/.zshrc.linux";
-	".shellrc".source = "${config.home.homeDirectory}/dotfiles/config/.shellrc";
-	".ripgreprc".source = "${config.home.homeDirectory}/dotfiles/config/.ripgreprc";
-    # # You can also set the file content immediately.
-    # ".gradle/gradle.properties".text = ''
-    #   org.gradle.console=verbose
-    #   org.gradle.daemon.idletimeout=3600000
-    # '';
-  };
-
-  # Home Manager can also manage your environment variables through
-  # 'home.sessionVariables'. These will be explicitly sourced when using a
-  # shell provided by Home Manager. If you don't want to manage your shell
-  # through Home Manager then you have to manually source 'hm-session-vars.sh'
-  # located at either
-  #
-  #  ~/.nix-profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  ~/.local/state/nix/profiles/profile/etc/profile.d/hm-session-vars.sh
-  #
-  # or
-  #
-  #  /etc/profiles/per-user/andrew/etc/profile.d/hm-session-vars.sh
-  #
-  home.sessionVariables = {
-    EDITOR="vim";
-  };
-
-  # zsh, owned by home-manager. The system config only does the minimum
-  # needed to make zsh a legal login shell (environment.shells + the passwd
-  # entry), which home-manager cannot do itself.
-  #
-  # zplug comes from the upstream module rather than hand-rolled sourcing:
-  # it sets ZPLUG_HOME=~/.zplug (writable - zplug clones plugin repos into
-  # it) and sources init.zsh from the read-only store package. Doing this by
-  # hand got ZPLUG_HOME pointed at the store, which fails on cache writes.
-  programs.zsh = {
-    enable = true;
-
-    zplug = {
-      enable = true;
-      plugins = [ { name = "zsh-users/zsh-autosuggestions"; } ];
-    };
-
-    # Ordered after the zplug block (mkOrder 550) so the autosuggest
-    # bindkeys in .zshrc.shared have the plugin available.
-    initContent = ''
-      source $HOME/.zshrc.shared
-      source $HOME/.zshrc.linux
-    '';
-  };
 
   # KDE Plasma settings, managed declaratively.
   programs.plasma = {
@@ -200,7 +122,4 @@ in
       };
     };
   };
-
-  # Let Home Manager install and manage itself.
-  programs.home-manager.enable = true;
 }
