@@ -26,11 +26,8 @@ in
   imports = [
     <nixos-hardware/framework/12-inch/13th-gen-intel>
     ./hardware-configuration.nix
+    ./nixos-common.nix
   ];
-
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
 
   # Pinned deliberately rather than linuxPackages_latest. The ILIT2901
   # touchscreen fault is still being bisected, and `nixos-rebuild --upgrade`
@@ -113,9 +110,6 @@ in
   # networking.proxy.default = "http://user:password@proxy:port/";
   # networking.proxy.noProxy = "127.0.0.1,localhost,internal.domain";
 
-  # Enable networking
-  networking.networkmanager.enable = true;
-
   # Intel AX211 (USB 8087:0033) - the kernel already binds it via btusb and
   # rfkill shows it unblocked, but bluez userspace is what was missing: this
   # flag is what runs bluetoothd and registers org.bluez on the system bus.
@@ -123,7 +117,7 @@ in
   # daemon behind it. This also gates the Plasma Bluetooth applet + System
   # Settings page: nixpkgs' plasma6 module adds bluedevil only under
   # lib.optionals config.hardware.bluetooth.enable, the same way
-  # networkmanager above is what pulls in plasma-nm.
+  # networkmanager (nixos-common.nix) is what pulls in plasma-nm.
   hardware.bluetooth.enable = true;
 
   # Targus DOCK220 (Thunderbolt) - same shape as the bluetooth case above:
@@ -137,49 +131,8 @@ in
   # /sys/bus/thunderbolt/devices stays empty until that is flipped.
   services.hardware.bolt.enable = true;
 
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
-
-  # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
-
-  # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
+  # PipeWire itself is enabled in nixos-common.nix.
   services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
     # If you want to use JACK applications, uncomment this
     # jack.enable = true;
 
@@ -207,17 +160,6 @@ in
   # file - though note /etc/libinput/local-overrides.quirks does not currently
   # exist, so nothing is being tuned that way today.
 
-  # Required, not optional: NixOS asserts that a user whose shell is zsh must
-  # also have programs.zsh.enable, because this is what generates /etc/zshrc -
-  # without it a zsh login has no nix directories on PATH. environment.shells
-  # alone is not enough.
-  #
-  # This does not take zsh config away from home-manager. The split is:
-  # NixOS owns /etc/zshrc (system PATH and profile plumbing) and /etc/shells;
-  # home-manager owns ~/.zshrc and everything in it, including zplug (see
-  # programs.zsh in nixos-home.nix).
-  programs.zsh.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."andrew" = {
     isNormalUser = true;
@@ -231,9 +173,6 @@ in
     #  thunderbird
     ];
   };
-
-  # Install firefox.
-  programs.firefox.enable = true;
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).

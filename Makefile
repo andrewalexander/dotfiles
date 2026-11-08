@@ -2,6 +2,7 @@ init-nix:
 
 sync-nixos:
 	sudo cp nixos-configuration.nix /etc/nixos/configuration.nix
+	sudo cp nixos-common.nix /etc/nixos/nixos-common.nix
 	sudo mkdir -p /etc/nixos/patches
 	sudo cp patches/*.patch /etc/nixos/patches/
 	sudo rm -rf /etc/nixos/pkgs
@@ -20,6 +21,7 @@ sync-home-mac:
 
 sync-server-nixos:
 	sudo cp nixos-server-configuration.nix /etc/nixos/configuration.nix
+	sudo cp nixos-common.nix /etc/nixos/nixos-common.nix
 	sudo cp nixos-server-private.nix /etc/nixos/nixos-server-private.nix
 
 sync-server-home:

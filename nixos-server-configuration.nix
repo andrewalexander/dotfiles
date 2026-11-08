@@ -24,6 +24,7 @@ in
 {
   imports = [
     ./hardware-configuration.nix
+    ./nixos-common.nix
     "${monitoringSrc}/nix/module.nix"
     "${jellyfinSrc}/nix/vpn-netns.nix"
     "${jellyfinSrc}/nix/wifi-watchdog.nix"
@@ -67,14 +68,7 @@ in
     };
   };
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
-
   networking.hostName = "ye-olde-server";
-
-  # Enable networking
-  networking.networkmanager.enable = true;
 
   # This box serves things, so it must never go to sleep on its own. Plasma's
   # idle settings can't override these.
@@ -119,55 +113,6 @@ in
   # insecure, but this laptop has no other way onto the network.
   nixpkgs.config.allowInsecurePredicate = pkg: lib.getName pkg == "broadcom-sta";
 
-  # Set your time zone.
-  time.timeZone = "America/New_York";
-
-  # Select internationalisation properties.
-  i18n.defaultLocale = "en_US.UTF-8";
-
-  i18n.extraLocaleSettings = {
-    LC_ADDRESS = "en_US.UTF-8";
-    LC_IDENTIFICATION = "en_US.UTF-8";
-    LC_MEASUREMENT = "en_US.UTF-8";
-    LC_MONETARY = "en_US.UTF-8";
-    LC_NAME = "en_US.UTF-8";
-    LC_NUMERIC = "en_US.UTF-8";
-    LC_PAPER = "en_US.UTF-8";
-    LC_TELEPHONE = "en_US.UTF-8";
-    LC_TIME = "en_US.UTF-8";
-  };
-
-  # Enable the X11 windowing system.
-  # You can disable this if you're only using the Wayland session.
-  services.xserver.enable = true;
-
-  # Enable the KDE Plasma Desktop Environment.
-  services.displayManager.sddm.enable = true;
-  services.desktopManager.plasma6.enable = true;
-
-  # Configure keymap in X11
-  services.xserver.xkb = {
-    layout = "us";
-    variant = "";
-  };
-
-  # Enable CUPS to print documents.
-  services.printing.enable = true;
-
-  # Enable sound with pipewire.
-  services.pulseaudio.enable = false;
-  security.rtkit.enable = true;
-  services.pipewire = {
-    enable = true;
-    alsa.enable = true;
-    alsa.support32Bit = true;
-    pulse.enable = true;
-  };
-
-  # Required for a zsh login shell; see the note in nixos-configuration.nix.
-  # home-manager owns ~/.zshrc.
-  programs.zsh.enable = true;
-
   # Define a user account. Don't forget to set a password with ‘passwd’.
   users.users."mac" = {
     isNormalUser = true;
@@ -179,9 +124,6 @@ in
     ];
     openssh.authorizedKeys.keys = private.authorizedKeys;
   };
-
-  # Install firefox.
-  programs.firefox.enable = true;
 
   # Allow unfree packages
   nixpkgs.config.allowUnfree = true;
