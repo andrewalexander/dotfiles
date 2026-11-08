@@ -10,7 +10,6 @@
 
   home.packages = [
 	pkgs.eza
-	pkgs.ghostty-bin
 	pkgs.zplug
   ];
 

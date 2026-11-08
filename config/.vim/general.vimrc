@@ -21,6 +21,9 @@ set hlsearch                    " Highlight found searches
 set mouse=a
 
 if has('persistent_undo')
+  if !isdirectory($HOME . '/.vim/undo')
+    call mkdir($HOME . '/.vim/undo', 'p', 0700)
+  endif
   set undofile
   set undodir=$HOME/.vim/undo
   set undolevels=1000
