@@ -23,8 +23,8 @@ let
       inherit sha256;
     };
   monitoringSrc =
-    private.monitoringSrc or (github "ye-olde-monitoring" "4bcd11d5706afea33ef5b166042b1abb7f4874b5"
-      "0wfl35qf4jc4hk6l3gcfbwwgwv2kbvzm7zw9ml7ikkp870dn7a0r"
+    private.monitoringSrc or (github "ye-olde-monitoring" "0fba8f76c3d748426807b107d56de40413729e1c"
+      "0jy7h1njq3bx1j575a9q4g64kappmig87a94wa1g4fd8bw0xrc6v"
     );
   jellyfinSrc =
     private.jellyfinSrc or (github "ye-olde-jellyfin" "ebaf92f60e28ff72fdcac8d5ea07a47aee611078"
@@ -75,6 +75,15 @@ in
     syslog = {
       enable = true;
       allow = [ private.gateway ];
+      # ~380 MB a day. Finished days move here nightly; today's stays on the
+      # SSD for the writer and for wifiWatchdog's inboundPath.
+      rawArchiveDir = "/mnt/big-boi/backup/dnscount/raw";
+    };
+    # Full copies of a database that's 1.3 GB and growing. Both jobs need
+    # big-boi mounted and fail without it, rather than fill the SSD.
+    backup = {
+      keep = 14;
+      dir = "/mnt/big-boi/backup/dnscount/db";
     };
   };
 
