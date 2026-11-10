@@ -39,7 +39,9 @@ in
     "${jellyfinSrc}/nix/vpn-netns.nix"
     "${jellyfinSrc}/nix/wifi-watchdog.nix"
     "${jellyfinSrc}/nix/media.nix"
-  ];
+  ]
+  # Host-only modules, kept in nixos-server-private.nix.
+  ++ (private.imports or [ ]);
 
   # Only Transmission and Jackett use the tunnel. They can't reach anything else
   # if it's down, and the rest of the machine never touches it. Key:
