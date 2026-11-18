@@ -31,6 +31,15 @@ in
         pkgs.nixfmt # vim formats .nix files with it on save
       ];
 
+      # Three kinds of file, pick one per thing:
+      # - store link (`source = "${dot}/X"`): Edit the dotfiles copy; run
+      #   home-manager switch to get it into the env. The default.
+      # - live link (config.lib.file.mkOutOfStoreSymlink): symlinks; share
+      #   configs apps write themselves. machines should share resultant configs
+      #   (xbar).  Edits land straight in the repo and show in `git diff`.
+      # - not linked: machine-local state the app writes (vim undo/swap/
+      #   plugged, caches). A real dir, so it never ends up in the repo; vim's
+      #   is made by general.vimrc.
       home.file = {
         ".vimrc".source = "${dot}/.vimrc";
         ".vim/autoload/plug.vim".source = "${dot}/.vim/autoload/plug.vim";
@@ -59,11 +68,6 @@ in
     # The system config only does the minimum needed to make zsh a legal login
     # shell (environment.shells + the passwd entry), which home-manager cannot
     # do itself.
-    #
-    # zplug comes from the upstream module rather than hand-rolled sourcing: it
-    # sets ZPLUG_HOME=~/.zplug (writable - zplug clones plugin repos into it)
-    # and sources init.zsh from the read-only store package. Doing this by hand
-    # got ZPLUG_HOME pointed at the store, which fails on cache writes.
     (lib.mkIf pkgs.stdenv.hostPlatform.isLinux {
       home.file.".zshrc.linux".source = "${dot}/.zshrc.linux";
 
@@ -84,18 +88,13 @@ in
       };
     })
 
-    # .zshrc.mac is the entry point on the Macs (homebrew/nvm/rustup + zplug
-    # from ~/.zplug); it sources .zshrc.shared at the end.
+    # .zshrc.mac is the entry point on the Macs
     (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
       home.file.".zshrc".source = "${dot}/.zshrc.mac";
-
-      # AeroSpace and xbar themselves come from the Brewfile (`make brew`), not
-      # nixpkgs, so there's only one copy of each in /Applications.
       home.file.".aerospace.toml".source = "${dot}/.aerospace.toml";
 
-      # A live link to the repo, not a store copy: xbar's in-app variable
-      # editor saves *.vars.json here, and plugins installed from xbar's
-      # browser land here too. Both show up in `git diff`.
+      # Use the symlink. xbar writes *.vars.json here. plugins installed from
+      # xbar's browser land here too. Tracked in git.
       home.file."Library/Application Support/xbar/plugins".source =
         config.lib.file.mkOutOfStoreSymlink "${dot}/xbar/plugins";
 
