@@ -1,5 +1,6 @@
 # `make sync` copies this machine's configs to where they take effect; then
 # `sudo nixos-rebuild switch` (NixOS) and `home-manager switch`.
+# On the Macs, `make brew` installs the Brewfile's apps.
 HOST := $(shell hostname -s)
 HM   := $(HOME)/.config/home-manager
 
@@ -22,12 +23,16 @@ else
 endif
 	rm -f $(HM)/home-common.nix
 
+# Installs what's missing from the Brewfile; leaves installed apps alone.
+brew:
+	brew bundle --file=Brewfile --no-upgrade
+
 # One-time, on a fresh Mac.
-init-mac:
+init-mac: brew
 	curl --proto '=https' --tlsv1.2 -L https://nixos.org/nix/install | sh -s -- --no-daemon
 	sudo nix-channel --add https://github.com/nix-community/home-manager/archive/master.tar.gz home-manager
 	sudo nix-channel --update
 	nix-shell '<home-manager>' -A install
 	home-manager switch
 
-.PHONY: sync init-mac
+.PHONY: sync brew init-mac

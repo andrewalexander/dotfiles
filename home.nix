@@ -89,6 +89,16 @@ in
     (lib.mkIf pkgs.stdenv.hostPlatform.isDarwin {
       home.file.".zshrc".source = "${dot}/.zshrc.mac";
 
+      # AeroSpace and xbar themselves come from the Brewfile (`make brew`), not
+      # nixpkgs, so there's only one copy of each in /Applications.
+      home.file.".aerospace.toml".source = "${dot}/.aerospace.toml";
+
+      # A live link to the repo, not a store copy: xbar's in-app variable
+      # editor saves *.vars.json here, and plugins installed from xbar's
+      # browser land here too. Both show up in `git diff`.
+      home.file."Library/Application Support/xbar/plugins".source =
+        config.lib.file.mkOutOfStoreSymlink "${dot}/xbar/plugins";
+
       programs.git = {
         enable = true;
         settings.user = {
