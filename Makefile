@@ -35,4 +35,10 @@ init-mac: brew
 	nix-shell '<home-manager>' -A install
 	home-manager switch
 
-.PHONY: sync brew init-mac
+# Checks whether the iReal Pro vendor .deb has moved, and if so regenerates
+# pkgs/irealpro with app2nix, re-applies the local patch, builds, syncs and
+# switches. Not part of `sync`: it reaches out to the network.
+update-irealpro:
+	@pkgs/irealpro/update.sh
+
+.PHONY: sync brew init-mac update-irealpro
