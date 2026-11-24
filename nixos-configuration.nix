@@ -125,6 +125,9 @@ in
     # PipeWire-native mixer: shows real nodes and the negotiated sample rate,
     # which plasma-pa hides
     pkgs.pwvucontrol
+    # partition managing - including exfat 
+    pkgs.kdePackages.partitionmanager
+    pkgs.exfatprogs
 
     # iReal Pro, packaged from the vendor .deb in pkgs/irealpro. Imported with
     # `inherit pkgs` rather than callPackage because the expression takes a
